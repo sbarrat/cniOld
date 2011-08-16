@@ -27,74 +27,115 @@ class Avisos extends Sql
      * @var array
      */
     private $_cumples = array();
+    
+    
+    
     public function __construct ()
     {
         parent::__construct();
     }
+    
+   
     /**
      * Muestra los avisos
      * @return string
      */
-    public function verAvisos ()
+    public function verAvisos ( $cumples = true, $contratos=true )
     {
-        $texto = '<input type="button" class="boton" value="[<]Ocultar Avisos" 
-	onclick="cerrar_avisos()"/>
-	<table class="tabla">
-	<tr><th colspan="2">Cartel de Avisos</th></tr>
-	<tr><th>Cumplea&ntilde;os</th>
-	<th>Contratos</th></tr>
-	<tr><td valign="top">
-	<table width="100%">';
-        $texto .= '<tr><th colspan="2">Hoy hace los años</th></tr>';
-        $texto .= $this->cumplesHoyTomorrowCentral( 'hoy' );
-        $texto .= $this->cumplesHoyTomorrowEmpresa( 'hoy' );
-        $texto .= $this->cumplesHoyTomorrowCentro( 'hoy' );
-        if ($this->_nadieCumple == 0) {
-            $texto .= '<tr><td class="' . Auxiliar::clase() . '" colspan="2">
-		Nadie cumple los años hoy
-		</td></tr>';
+        
+        $texto = '';
+        $cierreSimple = '<tr><th colspan="2"><span class="boton" 
+                onclick="cierralo()" onkeypress="cierralo()">[X] Cerrar</span>
+                </tr></th>';
+        
+        if( $cumples && $contratos ) {
+            $texto .= '<input type="button" class="boton" 
+            	value="[<]Ocultar Avisos" 
+				onclick="cerrar_avisos()"/>
+				<table class="tabla">
+				<tr><th colspan="2">Cartel de Avisos</th></tr>
+				<tr><th>Cumplea&ntilde;os</th>
+				<th>Contratos</th></tr>
+				<tr><td valign="top">';
         }
-        $this->_nadieCumple = 0;
-        $texto .= '<tr><th colspan="2">Y mañana:</th></tr>';
-        $texto .= $this->cumplesHoyTomorrowCentral( 'tomorrow' );
-        $texto .= $this->cumplesHoyTomorrowEmpresa( 'tomorrow' );
-        $texto .= $this->cumplesHoyTomorrowCentro( 'tomorrow' );
-        if ($this->_nadieCumple == 0) {
-            $texto .= '<tr><td class="' . Auxiliar::clase() . '" colspan="2">
-		Nadie cumple los años mañana</td></tr>';
-        }
-        $this->_nadieCumple = 0;
-        $texto .= '<tr><th colspan="2">En los siguientes 40 dias:</th></tr>';
-        if (date('m') == 12) //chequeamos el mes actual para modificar el orden
-            $this->_orden = " DESC ";
-        $this->cumplesProximosCentral();
-        $this->cumplesProximosEmpresa();
-        $this->cumplesProximosCentro();
-        if ($this->_nadieCumple == 0) {
-            $texto .= '<tr><td class="' . Auxiliar::clase() . '" colspan="2">
-		Nadie cumple los años en los proximos 40 dias
-		</td></tr>';
-        } else {
-            sort($this->_cumples);
-            
-            foreach ($this->_cumples as $cumple) {
-                $texto .= '<tr class="' . Auxiliar::clase() . '">
-    	<td>' . $cumple[1] . '</td>
-    	<td>' . $cumple[2];
-                if ($cumple[4] != NULL) {
-                    $texto .= 
-                    ' de <a href="javascript:muestra(' . $cumple[3] . ')">
-    		' . $cumple[4] . '</a>';
-                }
-                $texto .= '</td></tr>';
+           
+        if ( $cumples ) {
+            $texto .= '<table class="tabla" width="100%">';
+             
+            if ( !$contratos )
+                $texto .= $cierreSimple;
+	  
+            $texto .= '<tr><th colspan="2">Hoy hace los años</th></tr>';
+            $texto .= $this->cumplesHoyTomorrowCentral( 'hoy' );
+            $texto .= $this->cumplesHoyTomorrowEmpresa( 'hoy' );
+            $texto .= $this->cumplesHoyTomorrowCentro( 'hoy' );
+        
+            if ($this->_nadieCumple == 0) {
+                $texto .= '<tr><td class="' . Auxiliar::clase() . '" 
+                colspan="2"> Nadie cumple los años hoy
+				</td></tr>';
             }
+            
+            $this->_nadieCumple = 0;
+            $texto .= '<tr><th colspan="2">Y mañana:</th></tr>';
+            $texto .= $this->cumplesHoyTomorrowCentral( 'tomorrow' );
+            $texto .= $this->cumplesHoyTomorrowEmpresa( 'tomorrow' );
+            $texto .= $this->cumplesHoyTomorrowCentro( 'tomorrow' );
+        
+            if ($this->_nadieCumple == 0) {
+                $texto .= '<tr><td class="' . Auxiliar::clase() . '" 
+                colspan="2">Nadie cumple los años mañana</td></tr>';
+            }
+        
+            $this->_nadieCumple = 0;
+            $texto .= '<tr><th colspan="2">En 40 dias:</th></tr>';
+            
+            if (date('m') == 12) 
+                $this->_orden = " DESC ";
+        
+            $this->cumplesProximosCentral();
+            $this->cumplesProximosEmpresa();
+            $this->cumplesProximosCentro();
+        
+            if ($this->_nadieCumple == 0) {
+                $texto .= '<tr><td class="' . Auxiliar::clase() . '" 
+                colspan="2"> Nadie cumple los años en los proximos 40 dias
+				</td></tr>';
+            } else {
+                sort($this->_cumples);
+            
+                foreach ($this->_cumples as $cumple) {
+                    $texto .= '<tr class="' . Auxiliar::clase() . '">
+    					<td>' . $cumple[1] . '</td>
+    					<td>' . $cumple[2];
+                
+                    if ($cumple[4] != NULL) {
+                        $texto .= 
+                    	' de <a href="javascript:muestra(' . $cumple[3] . ')">
+    					' . $cumple[4] . '</a>';
+                    }
+                
+                $texto .= '</td></tr>';
+                }
+            }
+        
+            $texto .= '</table>';
         }
-        $texto .= '</table></td>';
+        if ($cumples && $contratos )
+            $texto .= '</td>';
+        
+        if ( $contratos ) {
+         $texto .= '<table class="tabla" width="100%">';
+             
+            if ( !$cumples )
+                $texto .= $cierreSimple;   
         $texto .= '<td valign="top">';
         $texto .= $this->finalizanContrato( 'hoy' );
         $texto .= $this->finalizanContrato( 'mes' );
         $texto .= $this->finalizanContrato( 'proximos' );
+        }
         $texto .= '</td></tr></table>';
+        
         echo $texto;
     }
     /**
@@ -322,7 +363,7 @@ class Avisos extends Sql
      */
     private function finalizanContrato ( $cuando )
     {
-        $cadena = '<table width="100%">';
+        
         $finalizacion = '';
         if ( $cuando == 'hoy' ) {
         	$finalizacion = 'Hoy';
@@ -374,7 +415,7 @@ class Avisos extends Sql
         
         parent::consulta($sql);
         
-        $cadena .= '<tr>
+        $cadena = '<tr>
 				<th>Dia</th>
 				<th>Finalizan contrato ' . $finalizacion . '</th>
 				</tr>';

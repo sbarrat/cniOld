@@ -1,5 +1,5 @@
 <?php
-class Cumples
+/*class Cumples
 {
     protected $db;
     function __construct()
@@ -122,5 +122,8 @@ else
     $cadena.="<tr><td colspan='3'>Nadie cumple años este Mes</td></tr>";
 $cadena.="</table>";
 echo $cadena;
-
+*/
+require_once 'variables.php';
+$avisos = new Avisos();
+$avisos->verAvisos(true,false);
 ?>

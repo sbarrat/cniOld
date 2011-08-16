@@ -1,4 +1,5 @@
 <?php 
+
 //datins.php Generacion de datos de interes para la aplicacion, avisos, cumplea�os, estadisticas, etc, lo vamos a controlar por opcion -> funcion si no es un kaos
 /*Indice de datos
 1 - Avisos
