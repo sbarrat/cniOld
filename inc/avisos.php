@@ -11,7 +11,7 @@
  * PHP Version 5.1.4
  * 
  * @author Ruben Lacasa Mas <rubendx@gmail.com>
- * @version 2.0
+ * @version 2.1
  */
 $ssid = session_id(); //comprobamos si existe el id de session
 if ( empty( $ssid ) )

@@ -20,7 +20,7 @@ error_reporting(E_ALL); //Todos los errores menos los deprecated
 <script type="text/javascript" src="js/lang/calendar-es.js"></script>
 <script type="text/javascript" src="js/calendar-setup.js"></script>
 <script type="text/javascript" src='js/independencia.js'></script>
-<title>Aplicacion Gestion Independencia Centro Negocios 2.0d</title>
+<title>Aplicacion Gestion Independencia Centro Negocios 2.1</title>
 </head>
 <body>
 <div id='cuerpo'>

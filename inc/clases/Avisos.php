@@ -54,13 +54,15 @@ class Avisos extends Sql
 				onclick="cerrar_avisos()"/>
 				<table class="tabla">
 				<tr><th colspan="2">Cartel de Avisos</th></tr>
-				<tr><th>Cumplea&ntilde;os</th>
-				<th>Contratos</th></tr>
+				<tr>
+				<th>Cumplea&ntilde;os</th>
+				<th>Contratos</th>
+				</tr>
 				<tr><td valign="top">';
         }
            
         if ( $cumples ) {
-            $texto .= '<table class="tabla" width="100%">';
+            $texto .= '<table class="tabla">';
              
             if ( !$contratos )
                 $texto .= $cierreSimple;
@@ -122,17 +124,18 @@ class Avisos extends Sql
             $texto .= '</table>';
         }
         if ($cumples && $contratos )
-            $texto .= '</td>';
+            $texto .= '</td><td valign="top">';
         
         if ( $contratos ) {
-         $texto .= '<table class="tabla" width="100%">';
+         $texto .= '<table class="tabla">';
              
             if ( !$cumples )
                 $texto .= $cierreSimple;   
-        $texto .= '<td valign="top">';
+        
         $texto .= $this->finalizanContrato( 'hoy' );
         $texto .= $this->finalizanContrato( 'mes' );
         $texto .= $this->finalizanContrato( 'proximos' );
+        $texto .= '</table>';
         }
         $texto .= '</td></tr></table>';
         
@@ -432,7 +435,7 @@ class Avisos extends Sql
 		Nadie Finaliza contrato ' . $finalizacion . '</td></tr>';
         }
         
-        $cadena .= '</table>';
+        //$cadena .= '</table>';
         return $cadena;
     }
     

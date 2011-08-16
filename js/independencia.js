@@ -719,16 +719,14 @@ function filtra_listado()
 	});
 }
 //***********************************************************************************************/
-function datos(dato) //funcion qui iniica el proceso de muestra de cumpleaños
+function datos(dato) //muestra solo cumpleaños, o contratos o busqueda avanzada
 {
 	var estilo = $('datos_interesantes').style
 	//directamente tenemos que recibir el contenido del fichero, ho hacen falta parametros
 	estilo.visibility = "visible";
 	pars = 'dato=' + dato;
-    if ( dato == 2 )
-        url='inc/cumples.php';
-    else
-        url='inc/datins.php';
+    url='inc/datos.php';
+    
         	
 	var myAjax = new Ajax.Request(url,
 	{
@@ -866,7 +864,7 @@ function chequea_valor()
 //********************BUSQUEDA AVANZADA********************************************/
 function busqueda_avanzada()
 {
-	var url="inc/bavanzada.php"
+	var url="inc/datos.php"
 	pars='opcion=0&'+Form.serialize($('busqueda_avanzada'))
 	var myAjax = new Ajax.Request(url,
 		{
