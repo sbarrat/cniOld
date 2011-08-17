@@ -27,28 +27,26 @@ class Avisos extends Sql
      * @var array
      */
     private $_cumples = array();
-    
-    
-    
     public function __construct ()
     {
         parent::__construct();
     }
-    
-   
     /**
      * Muestra los avisos
+     * 
+     * @todo Reducir complejidad
      * @return string
      */
-    public function verAvisos ( $cumples = true, $contratos=true )
+    public function verAvisos ($cumples = true, $contratos = true)
     {
-        
         $texto = '';
         $cierreSimple = '<tr><th colspan="2"><span class="boton" 
                 onclick="cierralo()" onkeypress="cierralo()">[X] Cerrar</span>
                 </tr></th>';
-        
-        if( $cumples && $contratos ) {
+        /**
+         * Cabezera para cumpleaños y contratos
+         */
+        if ($cumples && $contratos) {
             $texto .= '<input type="button" class="boton" 
             	value="[<]Ocultar Avisos" 
 				onclick="cerrar_avisos()"/>
@@ -60,18 +58,16 @@ class Avisos extends Sql
 				</tr>
 				<tr><td valign="top">';
         }
-           
-        if ( $cumples ) {
-            $texto .= '<table class="tabla">';
-             
-            if ( !$contratos )
-                $texto .= $cierreSimple;
-	  
-            $texto .= '<tr><th colspan="2">Hoy hace los años</th></tr>';
-            $texto .= $this->cumplesHoyTomorrowCentral( 'hoy' );
-            $texto .= $this->cumplesHoyTomorrowEmpresa( 'hoy' );
-            $texto .= $this->cumplesHoyTomorrowCentro( 'hoy' );
         
+        if ($cumples) {
+            $texto .= '<table class="tabla">';
+            if (! $contratos)
+                $texto .= $cierreSimple;
+            $texto .= '<tr><th colspan="2">Hoy hace los años</th></tr>';
+            $texto .= $this->cumplesHoyTomorrowCentral('hoy');
+            $texto .= $this->cumplesHoyTomorrowEmpresa('hoy');
+            $texto .= $this->cumplesHoyTomorrowCentro('hoy');
+            
             if ($this->_nadieCumple == 0) {
                 $texto .= '<tr><td class="' . Auxiliar::clase() . '" 
                 colspan="2"> Nadie cumple los años hoy
@@ -80,65 +76,61 @@ class Avisos extends Sql
             
             $this->_nadieCumple = 0;
             $texto .= '<tr><th colspan="2">Y mañana:</th></tr>';
-            $texto .= $this->cumplesHoyTomorrowCentral( 'tomorrow' );
-            $texto .= $this->cumplesHoyTomorrowEmpresa( 'tomorrow' );
-            $texto .= $this->cumplesHoyTomorrowCentro( 'tomorrow' );
-        
+            $texto .= $this->cumplesHoyTomorrowCentral('tomorrow');
+            $texto .= $this->cumplesHoyTomorrowEmpresa('tomorrow');
+            $texto .= $this->cumplesHoyTomorrowCentro('tomorrow');
+            
             if ($this->_nadieCumple == 0) {
                 $texto .= '<tr><td class="' . Auxiliar::clase() . '" 
                 colspan="2">Nadie cumple los años mañana</td></tr>';
             }
-        
+            
             $this->_nadieCumple = 0;
             $texto .= '<tr><th colspan="2">En 40 dias:</th></tr>';
             
-            if (date('m') == 12) 
+            if (date('m') == 12)
                 $this->_orden = " DESC ";
-        
+            
             $this->cumplesProximosCentral();
             $this->cumplesProximosEmpresa();
             $this->cumplesProximosCentro();
-        
+            
             if ($this->_nadieCumple == 0) {
                 $texto .= '<tr><td class="' . Auxiliar::clase() . '" 
                 colspan="2"> Nadie cumple los años en los proximos 40 dias
 				</td></tr>';
             } else {
                 sort($this->_cumples);
-            
                 foreach ($this->_cumples as $cumple) {
                     $texto .= '<tr class="' . Auxiliar::clase() . '">
     					<td>' . $cumple[1] . '</td>
     					<td>' . $cumple[2];
-                
                     if ($cumple[4] != NULL) {
                         $texto .= 
-                    	' de <a href="javascript:muestra(' . $cumple[3] . ')">
+                        ' de <a href="javascript:muestra(' . $cumple[3] . ')">
     					' . $cumple[4] . '</a>';
                     }
-                
-                $texto .= '</td></tr>';
+                    $texto .= '</td></tr>';
                 }
             }
-        
             $texto .= '</table>';
         }
-        if ($cumples && $contratos )
+        
+        if ($cumples && $contratos)
             $texto .= '</td><td valign="top">';
         
-        if ( $contratos ) {
-         $texto .= '<table class="tabla">';
-             
-            if ( !$cumples )
-                $texto .= $cierreSimple;   
-        
-        $texto .= $this->finalizanContrato( 'hoy' );
-        $texto .= $this->finalizanContrato( 'mes' );
-        $texto .= $this->finalizanContrato( 'proximos' );
-        $texto .= '</table>';
+        if ($contratos) {
+            $texto .= '<table class="tabla">';
+            
+            if (! $cumples)
+                $texto .= $cierreSimple;
+            $texto .= $this->finalizanContrato('hoy');
+            $texto .= $this->finalizanContrato('mes');
+            $texto .= $this->finalizanContrato('proximos');
+            $texto .= '</table>';
         }
-        $texto .= '</td></tr></table>';
         
+        $texto .= '</td></tr></table>';
         echo $texto;
     }
     /**
@@ -146,13 +138,13 @@ class Avisos extends Sql
      * @param string hoy/tomorrow
      * @return string
      */
-    private function cumplesHoyTomorrowCentral ( $cuando )
+    private function cumplesHoyTomorrowCentral ($cuando)
     {
         $texto = '';
-        if ( $cuando == 'tomorrow')
-        	$formato = 'ADDDATE( CURDATE(), 1 )';
+        if ($cuando == 'tomorrow')
+            $formato = 'ADDDATE( CURDATE(), 1 )';
         else
-        	$formato = 'CURDATE()';
+            $formato = 'CURDATE()';
         $sql = "SELECT  
 		`clientes`.`Nombre`, 
 		`pcentral`.`persona_central`, 
@@ -168,11 +160,13 @@ class Avisos extends Sql
             $this->_nadieCumple = 1;
             foreach (parent::datos() as $resultado) {
                 $texto .= '<tr>
-                <td class="' . Auxiliar::clase() . '" colspan="2">
-			' . Auxiliar::traduce($resultado['persona_central']) . ' de 
-			<a href="javascript:muestra(' .
-                 $resultado['id'] . ')">
-			' . Auxiliar::traduce($resultado['Nombre']) . '</a>
+                <td class="' .
+                 Auxiliar::clase() . '" colspan="2">
+			' .
+                 Auxiliar::traduce($resultado['persona_central']) . ' de 
+			<a href="javascript:muestra(' . $resultado['id'] . ')">
+			' .
+                 Auxiliar::traduce($resultado['Nombre']) . '</a>
 			</td></tr>';
             }
         }
@@ -183,13 +177,13 @@ class Avisos extends Sql
      * @param string hoy/tomorrow
      * @return string
      */
-    private function cumplesHoyTomorrowEmpresa ( $cuando )
+    private function cumplesHoyTomorrowEmpresa ($cuando)
     {
         $texto = '';
-        if ( $cuando == 'tomorrow')
-        	$formato = 'ADDDATE( CURDATE(), 1 )';
+        if ($cuando == 'tomorrow')
+            $formato = 'ADDDATE( CURDATE(), 1 )';
         else
-        	$formato = 'CURDATE()';
+            $formato = 'CURDATE()';
         $sql = "SELECT  
 		`clientes`.`Nombre`, 
 		`pempresa`.`nombre`,
@@ -202,15 +196,20 @@ class Avisos extends Sql
 		LIKE DATE_FORMAT(" . $formato . ",'%d %c') 
 		AND `clientes`.`Estado_de_cliente` != 0";
         parent::consulta($sql);
+        
         if (parent::totalDatos() != 0) {
             $this->_nadieCumple = 1;
             foreach (parent::datos() as $resultado) {
                 $texto .= '<tr>
-                <td class="' . Auxiliar::clase() . '" colspan="2">
-			' . Auxiliar::traduce($resultado['nombre']) . ' 
-			' . Auxiliar::traduce($resultado['apellidos']) . ' de 
+                <td class="' .
+                 Auxiliar::clase() . '" colspan="2">
+			' .
+                 Auxiliar::traduce($resultado['nombre']) . ' 
+			' .
+                 Auxiliar::traduce($resultado['apellidos']) . ' de 
 			<a href="javascript:muestra(' . $resultado['id'] . ')">
-			' . Auxiliar::traduce($resultado['Nombre']) . '</a></td></tr>';
+			' .
+                 Auxiliar::traduce($resultado['Nombre']) . '</a></td></tr>';
             }
         }
         return $texto;
@@ -220,14 +219,14 @@ class Avisos extends Sql
      * @param string hoy/tomorrow
      * @return string
      */
-    private function cumplesHoyTomorrowCentro ( $cuando )
+    private function cumplesHoyTomorrowCentro ($cuando)
     {
         $texto = '';
-        if ( $cuando == 'tomorrow')
-        	$formato = 'ADDDATE( CURDATE(), 1 )';
+        if ($cuando == 'tomorrow')
+            $formato = 'ADDDATE( CURDATE(), 1 )';
         else
-        	$formato = 'CURDATE()';
-        		
+            $formato = 'CURDATE()';
+            
         $sql = "SELECT * FROM `empleados` 
 	WHERE DATE_FORMAT( `FechNac`, '%d %c' )
 	LIKE DATE_FORMAT( " . $formato . ", '%d %c' )";
@@ -237,24 +236,22 @@ class Avisos extends Sql
             foreach (parent::datos() as $resultado) {
                 $texto .= '<tr><td class="
             ' . Auxiliar::clase() . '" colspan="2">
-			' . Auxiliar::traduce($resultado['Nombre']) . '  
-			' . Auxiliar::traduce($resultado['Apell1']) . ' 
-			' . Auxiliar::traduce($resultado['Apell2']) . ' </td></tr>';
+			' .
+                 Auxiliar::traduce($resultado['Nombre']) . '  
+			' .
+                 Auxiliar::traduce($resultado['Apell1']) . ' 
+			' .
+                 Auxiliar::traduce($resultado['Apell2']) . ' </td></tr>';
             }
         }
         return $texto;
     }
-    
-    
-    
-    
     /**
      * Muestra los  que cumplen años los proximos 40 dias de la central
      * 
      */
     private function cumplesProximosCentral ()
     {
-        
         $sql = "SELECT
 		`clientes`.`Nombre`, 
 		`pcentral`.`persona_central`, 
@@ -283,7 +280,6 @@ class Avisos extends Sql
                 $resultado['id'], Auxiliar::traduce($resultado['Nombre']));
             }
         }
-        
     }
     /**
      * Muestra los  que cumplen años los proximos 40 dias de la empresa
@@ -291,7 +287,6 @@ class Avisos extends Sql
      */
     private function cumplesProximosEmpresa ()
     {
-        
         $sql = "SELECT
 		`clientes`.`Nombre`,
 		`pempresa`.`nombre`,
@@ -319,12 +314,11 @@ class Avisos extends Sql
                 Fecha::invierte(Fecha::diaYmes($resultado['cumple'])), 
                 Fecha::diaYmes($resultado['cumple']), 
                 Auxiliar::traduce($resultado['nombre']) . ' 
-				' . Auxiliar::traduce($resultado['apellidos']), 
-                $resultado['id'], 
+				' .
+                 Auxiliar::traduce($resultado['apellidos']), $resultado['id'], 
                 Auxiliar::traduce($resultado['Nombre']));
             }
         }
-        
     }
     /**
      * Muestra los  que cumplen años los proximos 40 dias del centro
@@ -332,7 +326,6 @@ class Avisos extends Sql
      */
     private function cumplesProximosCentro ()
     {
-       
         $sql = "SELECT * FROM `empleados` 
 		WHERE ( 
 		DATEDIFF( 
@@ -353,25 +346,24 @@ class Avisos extends Sql
                 Fecha::invierte(Fecha::cambiaf($resultado['FechNac'])), 
                 Fecha::cambiaf($resultado['FechNac']), 
                 Auxiliar::traduce($resultado['Nombre']) . ' 
-					' . Auxiliar::traduce($resultado['Apell1']) . '
-					' . Auxiliar::traduce($resultado['Apell2']), NULL, NULL);
+					' .
+                 Auxiliar::traduce($resultado['Apell1']) . '
+					' .
+                 Auxiliar::traduce($resultado['Apell2']), NULL, NULL);
             }
         }
-        
     }
     /**
      * Muestra las empresas que finalizan contrato hoy
      * @param string hoy/mes/proximos
      * @return string
      */
-    private function finalizanContrato ( $cuando )
+    private function finalizanContrato ($cuando)
     {
-        
         $finalizacion = '';
-        if ( $cuando == 'hoy' ) {
-        	$finalizacion = 'Hoy';
-        	
-        $sql = "SELECT `facturacion`.`id`, 
+        if ($cuando == 'hoy') {
+            $finalizacion = 'Hoy';
+            $sql = "SELECT `facturacion`.`id`, 
 		`facturacion`.`idemp`, 
 		`facturacion`.`finicio`, 
 		`facturacion`.`duracion`, 
@@ -382,10 +374,9 @@ class Avisos extends Sql
 		WHERE DATE_FORMAT( `renovacion`, '%d %c %y' ) 
 		LIKE DATE_FORMAT( CURDATE(),'%d %c %y' ) 
 		AND `clientes`.`Estado_de_cliente` != 0";
-        } elseif ( $cuando == 'mes') {
-        	$finalizacion = 'este Mes';
-        	
-        	$sql = "SELECT `facturacion`.`id`, 
+        } elseif ($cuando == 'mes') {
+            $finalizacion = 'este Mes';
+            $sql = "SELECT `facturacion`.`id`, 
 		`facturacion`.`idemp`, 
 		`facturacion`.`finicio`, 
 		`facturacion`.`duracion`, 
@@ -399,9 +390,8 @@ class Avisos extends Sql
 		LIKE YEAR( CURDATE() ) 
 		AND `clientes`.`Estado_de_cliente` != 0 ORDER BY `renovacion` ASC";
         } else {
-        	$finalizacion = 'en los proximos 60 dias';
-        	
-        	$sql = "SELECT `facturacion`.`id`, 
+            $finalizacion = 'en los proximos 60 dias';
+            $sql = "SELECT `facturacion`.`id`, 
 		`facturacion`.`idemp`, 
 		`facturacion`.`finicio`, 
 		`facturacion`.`duracion`, 
@@ -415,29 +405,28 @@ class Avisos extends Sql
 		ORDER by MONTH( `renovacion` ) ASC, 
 		DAY( `renovacion` ) ASC";
         }
-        
         parent::consulta($sql);
-        
         $cadena = '<tr>
 				<th>Dia</th>
 				<th>Finalizan contrato ' . $finalizacion . '</th>
 				</tr>';
-    if ( parent::totalDatos() >= 1 ) {
+        if (parent::totalDatos() >= 1) {
             foreach (parent::datos() as $resultado) {
                 $cadena .= '<tr><td class="' . Auxiliar::clase() . '">
-			' . Fecha::cambiaf($resultado['renovacion']) . '</td>
+			' .
+                 Fecha::cambiaf($resultado['renovacion']) . '</td>
 			<td class="' . Auxiliar::clase() . '">
-			<a href="javascript:muestra(' . $resultado['idemp'] . ')" >
-			' . Auxiliar::traduce($resultado['Nombre']) . '</a></td></tr>';
+			<a href="javascript:muestra(' .
+                 $resultado['idemp'] . ')" >
+			' .
+                 Auxiliar::traduce($resultado['Nombre']) . '</a></td></tr>';
             }
         } else {
             $cadena .= '<tr><td colspan="2" class="' . Auxiliar::clase() . '">
-		Nadie Finaliza contrato ' . $finalizacion . '</td></tr>';
+		Nadie Finaliza contrato ' . $finalizacion .
+             '</td></tr>';
         }
-        
         //$cadena .= '</table>';
         return $cadena;
     }
-    
-   
 }

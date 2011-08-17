@@ -15,7 +15,6 @@ class Usuarios extends Sql
     {
         parent::__construct();
     }
-    
     /**
      * Pasandole el usuario y contraseña comprueba el usuario y 
      * lo registra
@@ -24,7 +23,6 @@ class Usuarios extends Sql
      */
     public function validacion ($vars)
     {
-        
         $contra = parent::escape(sha1($vars['passwd']));
         $usuario = parent::escape($vars['usuario']);
         $sql = "SELECT `nick`, `contra` 
@@ -32,23 +30,17 @@ class Usuarios extends Sql
 		WHERE `nick` LIKE '$usuario' 
 		AND `contra` LIKE '$contra'";
         parent::consulta($sql);
-        if ( parent::totalDatos() == 1) {
+        if (parent::totalDatos() == 1) {
             $ssid = session_id();
             if (empty($ssid))
                 session_start();
-            
             $_SESSION['usuario'] = $usuario;
-            
             $this->_valido = true;
-            
         }
     }
-    
-    public function esValido() {
-        
+    public function esValido ()
+    {
         return $this->_valido;
-        
     }
-    
 }
 ?>

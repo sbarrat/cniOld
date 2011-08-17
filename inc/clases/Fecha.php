@@ -57,18 +57,15 @@ class Fecha
     {
         return date('Y', strtotime($fecha));
     }
-    
-	
-    public static function diaYmes( $stamp )
-	{
-		$fdia = explode( '-', $stamp );
-		$fecha = $fdia[2] . '-' . $fdia[1];
-		return $fecha;
-	}
-	
-	public static function invierte( $fecha )
-	{
-    	$reves = explode( '-', $fecha );
-    	return $reves[1] . '-' . $reves[0];
-	}
+    public static function diaYmes ($stamp)
+    {
+        $fdia = explode('-', $stamp);
+        $fecha = $fdia[2] . '-' . $fdia[1];
+        return $fecha;
+    }
+    public static function invierte ($fecha)
+    {
+        $reves = explode('-', $fecha);
+        return $reves[1] . '-' . $reves[0];
+    }
 }

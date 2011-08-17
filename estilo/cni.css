@@ -69,6 +69,10 @@ textarea
 	color:#7d0063;
 }
 
+.encontrado {
+	color:#006400;
+	font-weight: bold;
+}
 .ok
 {
 	font-size:small;

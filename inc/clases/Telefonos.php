@@ -19,29 +19,28 @@ class Telefonos extends Sql
     {
         parent::__construct();
     }
-    
     /**
      * Funcion que muestra los telefonos por pantalla
      * @return string
      */
-    public function  verTelefonos() {
-    $cadena = '<input type="button" value="[v]Ocultar telefonos" 
+    public function verTelefonos ()
+    {
+        $cadena = '<input type="button" value="[v]Ocultar telefonos" 
 	onclick="cerrar_tablon_telefonos()" />';
-    $cadena .= $this->listado('Telefono');
-    $cadena .= $this->listado('Fax');
-    $cadena .= $this->listado('Adsl');
-    echo $cadena;
+        $cadena .= $this->listado('Telefono');
+        $cadena .= $this->listado('Fax');
+        $cadena .= $this->listado('Adsl');
+        echo $cadena;
     }
-    
     /**
      * Pasandole el servicio muestra su valor
      * @param string $servicio
      * @return string
      */
-    public function listadoTelefonos( $servicio ){
-    	
-    $cadena = '<p/><u><b>' . $servicio . ' del centro</b></u><p/>';
-    $sql = "SELECT `c`.`Id`, `c`.`Nombre`, `z`.`valor`, `z`.`servicio`, 
+    public function listadoTelefonos ($servicio)
+    {
+        $cadena = '<p/><u><b>' . $servicio . ' del centro</b></u><p/>';
+        $sql = "SELECT `c`.`Id`, `c`.`Nombre`, `z`.`valor`, `z`.`servicio`, 
 		(
 			SELECT `valor`
 			FROM `z_sercont`
@@ -54,29 +53,28 @@ class Telefonos extends Sql
 		INNER JOIN `z_sercont` AS `z` ON `c`.`Id` = `z`.`idemp`
 		WHERE `z`.`servicio` LIKE '" . $servicio . "'
 		ORDER BY `Despacho`";
-    parent::consulta($sql);
-    $cadena .= '<table><tr>';
-    $numeroLinea = 0;
-    $color = "";
-    if (parent::totalDatos() != 0) {
-        foreach (parent::datos() as $resultado) {
-            $color = '#CCC';
-            if (preg_match("/despacho/", $resultado['Categoria']))
-                $color = '#69C';
-            if (preg_match("/domicili/", $resultado['Categoria']))
-                $color = '#F90';
-            if ($numeroLinea % 4 == 0)
-                $cadena .= '</tr><tr>';
-            $cadena .= '<th bgcolor="' . $color . '" align="left">
+        parent::consulta($sql);
+        $cadena .= '<table><tr>';
+        $numeroLinea = 0;
+        $color = "";
+        if (parent::totalDatos() != 0) {
+            foreach (parent::datos() as $resultado) {
+                $color = '#CCC';
+                if (preg_match("/despacho/", $resultado['Categoria']))
+                    $color = '#69C';
+                if (preg_match("/domicili/", $resultado['Categoria']))
+                    $color = '#F90';
+                if ($numeroLinea % 4 == 0)
+                    $cadena .= '</tr><tr>';
+                $cadena .= '<th bgcolor="' . $color . '" align="left">
 			<a href="javascript:muestra( ' . $resultado['Id'] . ' )">
 			' . $resultado['Despacho'] . '-
-			' .
-             Auxiliar::traduce($resultado['Nombre']) . '-<u><b>' .
-             $resultado['valor'] . '</b></u></a></th>';
-            $numeroLinea ++;
+			' . Auxiliar::traduce($resultado['Nombre']) . '-<u><b>' .
+                 $resultado['valor'] . '</b></u></a></th>';
+                $numeroLinea ++;
+            }
         }
-    }
-    $cadena .= '</tr></table>';
-    return $cadena;
+        $cadena .= '</tr></table>';
+        return $cadena;
     }
 }

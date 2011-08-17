@@ -18,8 +18,8 @@ if ( empty( $ssid ) )
     session_start(); // si no existe iniciamos sesion
 if ( isset( $_SESSION[ 'usuario' ] ) ) {
     require_once 'variables.php';
-    	$avisos = new Avisos();
-    	$telefonos = new Telefonos();
+        $avisos = new Avisos();
+        $telefonos = new Telefonos();
     if ( isset( $_POST[ 'opcion' ] ) ) {
         if ( $_POST[ 'opcion' ] == 0 )
             $avisos->verAvisos();
