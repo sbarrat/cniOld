@@ -30,6 +30,35 @@ class Avisos extends Sql
     public function __construct ()
     {
         parent::__construct();
+        
+        if (date('m') == 12)
+            $this->_orden = " DESC ";
+                
+    }
+    
+    private function nadieCumple( $cuando )
+    {
+        $texto = '';
+        if ( $this->_nadieCumple == 0 ) {
+            $texto = '<tr><td class="' . Auxiliar::clase() . '" 
+                colspan="2"> Nadie cumple los años ' . $cuando . '
+				</td></tr>';
+        }
+        $this->_nadieCumple = 0;
+        
+        return $texto;
+    }
+    private function todayOrTomorrow( $var )
+    {
+        
+        if ( strtotime($var.'-'.date('Y')) == strtotime('TODAY') )
+            $cuando = '<strong>HOY</strong>';
+        elseif ( strtotime($var.'-'.date('Y')) == strtotime('+1 DAY') )
+            $cuando = '<strong>MAÑANA</strong>';
+        else
+            $cuando = $var; 
+
+        return $cuando;    
     }
     /**
      * Muestra los avisos
@@ -63,37 +92,12 @@ class Avisos extends Sql
             $texto .= '<table class="tabla">';
             if (! $contratos)
                 $texto .= $cierreSimple;
-            $texto .= '<tr><th colspan="2">Hoy hace los años</th></tr>';
-            $texto .= $this->cumplesHoyTomorrowCentral('hoy');
-            $texto .= $this->cumplesHoyTomorrowEmpresa('hoy');
-            $texto .= $this->cumplesHoyTomorrowCentro('hoy');
             
-            if ($this->_nadieCumple == 0) {
-                $texto .= '<tr><td class="' . Auxiliar::clase() . '" 
-                colspan="2"> Nadie cumple los años hoy
-				</td></tr>';
-            }
-            
-            $this->_nadieCumple = 0;
-            $texto .= '<tr><th colspan="2">Y mañana:</th></tr>';
-            $texto .= $this->cumplesHoyTomorrowCentral('tomorrow');
-            $texto .= $this->cumplesHoyTomorrowEmpresa('tomorrow');
-            $texto .= $this->cumplesHoyTomorrowCentro('tomorrow');
-            
-            if ($this->_nadieCumple == 0) {
-                $texto .= '<tr><td class="' . Auxiliar::clase() . '" 
-                colspan="2">Nadie cumple los años mañana</td></tr>';
-            }
-            
-            $this->_nadieCumple = 0;
-            $texto .= '<tr><th colspan="2">En 40 dias:</th></tr>';
-            
-            if (date('m') == 12)
-                $this->_orden = " DESC ";
-            
+            $texto .= '<tr><th colspan="2">Proximos Cumpleaños</th></tr>';
             $this->cumplesProximosCentral();
             $this->cumplesProximosEmpresa();
             $this->cumplesProximosCentro();
+          
             
             if ($this->_nadieCumple == 0) {
                 $texto .= '<tr><td class="' . Auxiliar::clase() . '" 
@@ -103,8 +107,9 @@ class Avisos extends Sql
                 sort($this->_cumples);
                 foreach ($this->_cumples as $cumple) {
                     $texto .= '<tr class="' . Auxiliar::clase() . '">
-    					<td>' . $cumple[1] . '</td>
+    					<td>' . $this->todayOrTomorrow($cumple[1]) . '</td>
     					<td>' . $cumple[2];
+                    
                     if ($cumple[4] != NULL) {
                         $texto .= 
                         ' de <a href="javascript:muestra(' . $cumple[3] . ')">
@@ -124,128 +129,16 @@ class Avisos extends Sql
             
             if (! $cumples)
                 $texto .= $cierreSimple;
-            $texto .= $this->finalizanContrato('hoy');
-            $texto .= $this->finalizanContrato('mes');
-            $texto .= $this->finalizanContrato('proximos');
+            
+            $texto .= $this->finalizanContrato();
             $texto .= '</table>';
         }
         
         $texto .= '</td></tr></table>';
         echo $texto;
     }
-    /**
-     * Muestra los cumpleaños de hoy de los empleados de la central
-     * @param string hoy/tomorrow
-     * @return string
-     */
-    private function cumplesHoyTomorrowCentral ($cuando)
-    {
-        $texto = '';
-        if ($cuando == 'tomorrow')
-            $formato = 'ADDDATE( CURDATE(), 1 )';
-        else
-            $formato = 'CURDATE()';
-        $sql = "SELECT  
-		`clientes`.`Nombre`, 
-		`pcentral`.`persona_central`, 
-		`pcentral`.`cumple`,
-		`clientes`.`id`
-		FROM `clientes` INNER JOIN `pcentral` 
-		ON `clientes`.`Id` = `pcentral`.`idemp` 
-		WHERE DATE_FORMAT(`pcentral`.`cumple`,'%d %c') 
-		LIKE DATE_FORMAT(" . $formato . ",'%d %c') 
-		AND `clientes`.`Estado_de_cliente` != 0";
-        parent::consulta($sql);
-        if (parent::totalDatos() != 0) {
-            $this->_nadieCumple = 1;
-            foreach (parent::datos() as $resultado) {
-                $texto .= '<tr>
-                <td class="' .
-                 Auxiliar::clase() . '" colspan="2">
-			' .
-                 Auxiliar::traduce($resultado['persona_central']) . ' de 
-			<a href="javascript:muestra(' . $resultado['id'] . ')">
-			' .
-                 Auxiliar::traduce($resultado['Nombre']) . '</a>
-			</td></tr>';
-            }
-        }
-        return $texto;
-    }
-    /**
-     * Muestra los que cumplen años hoy en la central
-     * @param string hoy/tomorrow
-     * @return string
-     */
-    private function cumplesHoyTomorrowEmpresa ($cuando)
-    {
-        $texto = '';
-        if ($cuando == 'tomorrow')
-            $formato = 'ADDDATE( CURDATE(), 1 )';
-        else
-            $formato = 'CURDATE()';
-        $sql = "SELECT  
-		`clientes`.`Nombre`, 
-		`pempresa`.`nombre`,
-		`pempresa`.`apellidos`, 
-		`pempresa`.`cumple`,
-		`clientes`.`id`
-		FROM `clientes` INNER JOIN `pempresa` 
-		ON `clientes`.`Id` = `pempresa`.`idemp` 
-		WHERE DATE_FORMAT(`pempresa`.`cumple`,'%d %c') 
-		LIKE DATE_FORMAT(" . $formato . ",'%d %c') 
-		AND `clientes`.`Estado_de_cliente` != 0";
-        parent::consulta($sql);
-        
-        if (parent::totalDatos() != 0) {
-            $this->_nadieCumple = 1;
-            foreach (parent::datos() as $resultado) {
-                $texto .= '<tr>
-                <td class="' .
-                 Auxiliar::clase() . '" colspan="2">
-			' .
-                 Auxiliar::traduce($resultado['nombre']) . ' 
-			' .
-                 Auxiliar::traduce($resultado['apellidos']) . ' de 
-			<a href="javascript:muestra(' . $resultado['id'] . ')">
-			' .
-                 Auxiliar::traduce($resultado['Nombre']) . '</a></td></tr>';
-            }
-        }
-        return $texto;
-    }
-    /**
-     * Muestra los empleados del centro que cumplen años hoy
-     * @param string hoy/tomorrow
-     * @return string
-     */
-    private function cumplesHoyTomorrowCentro ($cuando)
-    {
-        $texto = '';
-        if ($cuando == 'tomorrow')
-            $formato = 'ADDDATE( CURDATE(), 1 )';
-        else
-            $formato = 'CURDATE()';
-            
-        $sql = "SELECT * FROM `empleados` 
-	WHERE DATE_FORMAT( `FechNac`, '%d %c' )
-	LIKE DATE_FORMAT( " . $formato . ", '%d %c' )";
-        parent::consulta($sql);
-        if (parent::totalDatos() != 0) {
-            $this->_nadieCumple = 1;
-            foreach (parent::datos() as $resultado) {
-                $texto .= '<tr><td class="
-            ' . Auxiliar::clase() . '" colspan="2">
-			' .
-                 Auxiliar::traduce($resultado['Nombre']) . '  
-			' .
-                 Auxiliar::traduce($resultado['Apell1']) . ' 
-			' .
-                 Auxiliar::traduce($resultado['Apell2']) . ' </td></tr>';
-            }
-        }
-        return $texto;
-    }
+    
+    
     /**
      * Muestra los  que cumplen años los proximos 40 dias de la central
      * 
@@ -261,7 +154,7 @@ class Avisos extends Sql
 		FROM `clientes` INNER JOIN `pcentral` 
 		ON `clientes`.`Id` = `pcentral`.`idemp` 
 		WHERE (
- 			DAY( `pcentral`.`cumple` ) > DAY( CURDATE() ) 
+ 			DAY( `pcentral`.`cumple` ) >= DAY( CURDATE() ) 
  			AND MONTH( `pcentral`.`cumple` ) LIKE MONTH( CURDATE() )
  			OR MONTH( `pcentral`.`cumple` ) 
  			LIKE MONTH( DATE_ADD( CURDATE(), INTERVAL 40 DAY ) )
@@ -297,7 +190,7 @@ class Avisos extends Sql
 		FROM `clientes` INNER JOIN `pempresa` 
 		ON `clientes`.`Id` = `pempresa`.`idemp` 
 		WHERE (
- 			DAY( `pempresa`.`cumple` ) > DAY( CURDATE() ) 
+ 			DAY( `pempresa`.`cumple` ) >= DAY( CURDATE() ) 
  			AND MONTH( `pempresa`.`cumple`) 
  			LIKE MONTH( CURDATE() )
  			OR MONTH( `pempresa`.`cumple`) 
@@ -358,40 +251,10 @@ class Avisos extends Sql
      * @param string hoy/mes/proximos
      * @return string
      */
-    private function finalizanContrato ($cuando)
+    private function finalizanContrato ()
     {
-        $finalizacion = '';
-        if ($cuando == 'hoy') {
-            $finalizacion = 'Hoy';
-            $sql = "SELECT `facturacion`.`id`, 
-		`facturacion`.`idemp`, 
-		`facturacion`.`finicio`, 
-		`facturacion`.`duracion`, 
-		`facturacion`.`renovacion`, 
-		`clientes`.`Nombre`
-		FROM `facturacion` INNER JOIN `clientes` 
-		ON `facturacion`.`idemp` = `clientes`.`Id`
-		WHERE DATE_FORMAT( `renovacion`, '%d %c %y' ) 
-		LIKE DATE_FORMAT( CURDATE(),'%d %c %y' ) 
-		AND `clientes`.`Estado_de_cliente` != 0";
-        } elseif ($cuando == 'mes') {
-            $finalizacion = 'este Mes';
-            $sql = "SELECT `facturacion`.`id`, 
-		`facturacion`.`idemp`, 
-		`facturacion`.`finicio`, 
-		`facturacion`.`duracion`, 
-		`facturacion`.`renovacion`, 
-		`clientes`.`Nombre`
-		FROM `facturacion` INNER JOIN `clientes` 
-		ON `facturacion`.`idemp` = `clientes`.`Id`
-		WHERE MONTH( `renovacion` ) 
-		LIKE MONTH( CURDATE() ) 
-		AND YEAR( `renovacion` ) 
-		LIKE YEAR( CURDATE() ) 
-		AND `clientes`.`Estado_de_cliente` != 0 ORDER BY `renovacion` ASC";
-        } else {
-            $finalizacion = 'en los proximos 60 dias';
-            $sql = "SELECT `facturacion`.`id`, 
+        
+        $sql = "SELECT `facturacion`.`id`, 
 		`facturacion`.`idemp`, 
 		`facturacion`.`finicio`, 
 		`facturacion`.`duracion`, 
@@ -404,11 +267,11 @@ class Avisos extends Sql
 		AND `clientes`.`Estado_de_cliente` != 0 
 		ORDER by MONTH( `renovacion` ) ASC, 
 		DAY( `renovacion` ) ASC";
-        }
+        
         parent::consulta($sql);
         $cadena = '<tr>
 				<th>Dia</th>
-				<th>Finalizan contrato ' . $finalizacion . '</th>
+				<th>Finalizan contrato en los Proximos dias</th>
 				</tr>';
         if (parent::totalDatos() >= 1) {
             foreach (parent::datos() as $resultado) {
@@ -423,10 +286,9 @@ class Avisos extends Sql
             }
         } else {
             $cadena .= '<tr><td colspan="2" class="' . Auxiliar::clase() . '">
-		Nadie Finaliza contrato ' . $finalizacion .
-             '</td></tr>';
+		Nadie Finaliza contrato en los proximos dias</td></tr>';
         }
-        //$cadena .= '</table>';
+        
         return $cadena;
     }
 }

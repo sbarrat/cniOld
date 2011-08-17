@@ -126,7 +126,7 @@ function generador( $vars ) {
 			&nbsp;<input class="boton" type="submit" 
 			onclick = popUp("agenda/index.php") value = "Agenda" />
 			&nbsp;<input class="boton" type="submit" 
-			onclick = popUp("entradas2/index.php") value = "Entradas" />';
+			onclick = popUp("entradas/index.php") value = "Entradas" />';
 			
 		}
 		
