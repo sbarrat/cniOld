@@ -109,18 +109,18 @@ function upss(registro)
 function submenu(codigo)
 {
 	
-	var url = "inc/generator.php"
-	var registro = $F('idemp')
-	var pars = "opcion=3&codigo="+codigo+"&registro="+registro
+	var url = "inc/generator.php";
+	var registro = $F('idemp');
+	var pars = "opcion=3&codigo="+codigo+"&registro="+registro;
 	var myAjax = new Ajax.Request(url,
 	 {
 			method:'post',
 			parameters: pars,
 			onComplete: function gen(t)
 			{
-				$('formulario').innerHTML = t.responseText
+				$('formulario').innerHTML = t.responseText;
 				//parte de las fechas
-				campos_fecha($F('nombre_tabla'))
+				campos_fecha($F('nombre_tabla'));
 				//editor de textos
 				
 			}
@@ -376,11 +376,11 @@ function borrar_registro(registro)
 function muestra_registro(registro)
 {
 	
-	var codigo = $F('codigo')
-	var tabla=$F('nombre_tabla')
-	var opcion = $F('opcion')
-	var url = "inc/generator.php"
-	var pars = "opcion=3&codigo="+codigo+"&registro="+registro+"&tabla="+tabla+"&marcado=1"
+	var codigo = $F('codigo');
+	var tabla=$F('nombre_tabla');
+	var opcion = $F('opcion');
+	var url = "inc/generator.php";
+	var pars = "opcion=3&codigo="+codigo+"&registro="+registro+"&tabla="+tabla+"&marcado=1";
 	var myAjax = new Ajax.Request(url,
 	 {
 			method:'post',
@@ -388,9 +388,9 @@ function muestra_registro(registro)
 			onComplete: function gen(t)
 			{
 				
-				$('formulario').innerHTML = t.responseText
+				$('formulario').innerHTML = t.responseText;
 				
-				campos_fecha(tabla)
+				campos_fecha(tabla);
 				
 			}
 	});

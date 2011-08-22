@@ -16,13 +16,58 @@ class Busqueda extends Sql
     }
     /**
      * Busqueda de un dato en una tabla
-     * @param string $var
+     * @param array $vars
      * @param string $tabla
      */
-    public function BusquedaSimple ($var, $tabla)
+    public function BusquedaSimple ($vars)
     {
-        // TODO
+        
+        $cadena = '';
+        $extrasql = '';
+        
+        if ( $vars[ 'texto' ] != "" ) {
+		
+		    $vars[ 'texto' ] = 
+			    Auxiliar::codifica( htmlentities( $vars[ 'texto' ] ) );
+		
+		    if ( $vars[ 'tabla' ] == 'clientes' ) {
+			
+			    $extrasql = " OR `Contacto` LIKE '%" . $vars[ 'texto' ] . "%' ";
+		    }   
+			
+		    $sql = "SELECT * FROM `" . $vars[ 'tabla' ] . "` 
+			WHERE `Nombre` LIKE '%" . $vars[ 'texto' ] . "%'
+			" . $extrasql . " 
+			ORDER by `Nombre`";
+		
+		    parent::consulta( $sql );
+		
+		    $cadena = '<input class="boton" type="button" 
+				onclick="cierra_frm_busca()" value="[X]Cerrar">';
+			
+		    foreach ( parent::datos() as $resultado ) {
+			    if ( isset( $resultado[ 'Id' ] ) )
+				    $id = $resultado[ 'Id' ];
+			    if ( isset( $resultado[ 'id' ] ) )
+				    $id = $resultado[ 'id' ];	
+			
+				$cadena .='<div class="' . Auxiliar::clase() . '">
+				<a href="javascript:muestra(' . $id . ')" >
+				' . Auxiliar::traduce( 
+				    preg_replace( '/'.$vars[ 'texto' ].'/iu' , 
+					'<span class="resalta">
+						' . strtoupper( $vars[ 'texto' ] ) . '
+					</span>',
+			        $resultado[ 'Nombre' ] 
+			        ) ) 
+			    . '</a></div>';
+		    }
+	    }
+	
+        return $cadena;
+    
     }
+    
     /**
      * Muestra el formulario de busqueda avanzada
      */
@@ -104,26 +149,32 @@ class Busqueda extends Sql
     public function BusquedaAvanzada ($vars)
     {
         $cadena = '';
-        if ($vars['texto'] != NULL)
-            $cadena .= 'Busqueda de:<strong>' . $vars['texto'] . '</strong>';
+         
+        if ($vars['texto'] != NULL){
+            $vars['texto'] = parent::escape($vars['texto']); //Texto a mostrar
+            $texto = Auxiliar::codifica($vars['texto']); //Texto a buscar
+            $cadena .= 
+				'Busqueda de:<strong>' . $vars['texto'] . '</strong>';
+		}
         /**
          * Chequeamos si es un telefono
          */
-        $token = preg_replace("/ /", "//", $vars['texto']);
+        $token = preg_replace("/ /", "//", $texto);
         if (is_numeric($token) && strlen($token) == 9) {
+            $texto = $token;
             $vars['texto'] = $token;
         }
-        $vars['texto'] = parent::escape(Auxiliar::codifica($vars['texto']));
+        
         $sql = "SELECT `c`.`id`, `c`.`Nombre`, `c`.`Contacto`, 
     	`p`.`nombre`, `p`.`apellidos`
 		FROM `clientes` AS `c`
 		JOIN `pempresa` AS `p` ON `c`.`id` = `p`.`idemp`
-		WHERE (`c`.`Nombre` LIKE '%" . $vars['texto'] . "%'
-		OR `c`.`Contacto` LIKE '%" . $vars['texto'] . "%'
-		OR `p`.`nombre` LIKE '%" . $vars['texto'] . "%'
-		OR `p`.`apellidos` LIKE '%" . $vars['texto'] . "%'
+		WHERE (`c`.`Nombre` LIKE '%" . $texto . "%'
+		OR `c`.`Contacto` LIKE '%" . $texto . "%'
+		OR `p`.`nombre` LIKE '%" . $texto . "%'
+		OR `p`.`apellidos` LIKE '%" . $texto . "%'
 		OR CONCAT( `p`.`nombre`, ' ' ,`p`.`apellidos`, '%' ) LIKE '%" .
-         $vars['texto'] . "%')
+         $texto . "%')
     	and `c`.`Estado_de_cliente` = '-1'";
         $tabla = 'clientes';
         $campos = array('id', 'Nombre', 'Contacto', 'nombre', 'apellidos');
@@ -136,11 +187,11 @@ class Busqueda extends Sql
         $sql = "SELECT `id`, `Nombre` FROM `clientes` 
 		WHERE 
 		(  REPLACE( `Tfno1`, ' ', '' ) LIKE '%" .
-         $vars['texto'] . "%' 
+         $texto . "%' 
 		OR REPLACE( `Tfno2`, ' ', '' ) LIKE '%" .
-         $vars['texto'] . "%' 
+         $texto . "%' 
 		OR REPLACE( `Tfno3`, ' ', '' ) LIKE '%" .
-         $vars['texto'] . "%' )
+         $texto . "%' )
     	AND `Estado_de_cliente` = '-1'";
         $tabla = 'Telefonos de clientes';
         $campos = array('id', 'Nombre');
@@ -159,7 +210,7 @@ class Busqueda extends Sql
 		INNER JOIN `clientes` as `c` 
 		ON `c`.`id` = `p`.`idemp`
 		WHERE REPLACE(`p`.`telefono`, ' ', '') 
-		LIKE '%" . $vars['texto'] . "%'
+		LIKE '%" . $texto . "%'
 		AND `c`.`Estado_de_cliente` = '-1'";
         $tabla = 'Telefonos de clientes';
         $campos = array('id', 'nombre', 'apellidos', 'Nombre');
@@ -178,7 +229,7 @@ class Busqueda extends Sql
 		INNER JOIN `clientes` as `c` 
 		ON `c`.`id` = `p`.`idemp` 
     	WHERE REPLACE( `p`.`telefono`, ' ', '') 
-    	LIKE '%" . $vars['texto'] . "%'
+    	LIKE '%" . $texto . "%'
     	AND `c`.`Estado_de_cliente` = '-1'";
         $tabla = 'Telefonos de la central';
         $campos = array('id', 'persona_central', 'Nombre');
@@ -195,11 +246,11 @@ class Busqueda extends Sql
         $sql = "SELECT `c`.`id`, `c`.`Nombre`, `p`.`nombre`, `p`.`apellidos`
 		FROM `proveedores` AS `c`
 		left JOIN `pproveedores` AS `p` ON `c`.`id` = `p`.`idemp`
-		WHERE `c`.`Nombre` LIKE '%" . $vars['texto'] . "%'
-		OR `p`.`nombre` LIKE '%" . $vars['texto'] . "%'
-		OR `p`.`apellidos` LIKE '%" . $vars['texto'] . "%'
+		WHERE `c`.`Nombre` LIKE '%" . $texto . "%'
+		OR `p`.`nombre` LIKE '%" . $texto . "%'
+		OR `p`.`apellidos` LIKE '%" . $texto . "%'
 		OR CONCAT( `p`.`nombre`, '', `p`.`apellidos`, '%' ) 
-		LIKE '%" . $vars['texto'] . "%'";
+		LIKE '%" . $texto . "%'";
         $tabla = 'Proveedores';
         $campos = array('id', 'Nombre', 'nombre', 'apellidos');
         $cadena .= 
@@ -218,7 +269,7 @@ class Busqueda extends Sql
 		INNER JOIN `z_sercont` AS `z` 
 		ON `c`.`ID` LIKE `z`.`idemp`
 		WHERE REPLACE(`valor`, ' ', '') LIKE 
-		'%" . $vars['texto'] . "%'
+		'%" . $texto . "%'
 		AND `c`.`Estado_de_cliente` = '-1'";
         $tabla = 'Telecomunicaciones';
         $campos = array('ID', 'Nombre', 'valor', 'servicio');

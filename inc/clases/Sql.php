@@ -9,7 +9,7 @@ class Sql
     private $_dbname = "centro";
     function __construct ()
     {
-        $this->_conexion = mysql_connect($this->_host, $this->_username, 
+        $this->_conexion = mysql_pconnect($this->_host, $this->_username, 
         $this->_password);
         if (! $this->_conexion)
             die("Database connection failed: " . mysql_error());
