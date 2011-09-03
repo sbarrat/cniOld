@@ -6,7 +6,7 @@ require_once 'inc/variables.php';
  * Aplicacion de gestion de centros de negocios
  */
 session_start();
-error_reporting(E_ALL); //Todos los errores menos los deprecated
+error_reporting( E_ALL ); //Todos los errores menos los deprecated
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -88,12 +88,33 @@ if ( isset($_SESSION['usuario'] ) ) {
 </div>
 
 <div style='margin-left: 300px'>
-<p><span class="etiqueta">Desarrollado por sbarrat::<?php
-    echo date('Y');
-    ?></span>
+
+<p>
+<a href='http://www.ensenalia.com'><img src='imagenes/ensenalia.jpg'
+	width='128' /></a>
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+	<img alt="Licencia de Creative Commons" style="border-width:0" 
+		src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" />
+</a>
+<br />
 </p>
-<p><a href='http://www.ensenalia.com'><img src='imagenes/ensenalia.jpg'
-	width='128' /></a></p>
+<p>
+<span xmlns:dct="http://purl.org/dc/terms/" 
+	href="http://purl.org/dc/dcmitype/Text" 
+	property="dct:title" 
+	rel="dct:type">CNI
+</span> by 
+<a xmlns:cc="http://creativecommons.org/ns#" 
+	href="https://github.com/sbarrat" 
+	property="cc:attributionName" 
+	rel="cc:attributionURL">Ruben Lacasa::<?php echo date( 'Y' ); ?>
+</a> is licensed under a<br/> 
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+Creative Commons Reconocimiento-CompartirIgual 3.0 Unported License
+</a>
+<br />
+</p>	
+
 </div>
 </div>
 <?php

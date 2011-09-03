@@ -1,20 +1,33 @@
 <?php
-require_once 'Sql.php';
 /**
+ * Aplicacion File Doc Comment
  * 
- * clases/Aplicacion.php Gestiona Aspectos de la aplicacion
- * 
- * Muestra partes de la aplicacion, como el menu
+ * Clase que gestiona Aspectos de la aplicacion
  * 
  * PHP Version 5.1.4
  * 
- * @author Ruben Lacasa Mas <rubendx@gmail.com>
- * @version 2.1
+ * @category Aplicacion
+ * @package  inc/clases
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com> 
+ * @license  http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons by-sa 3.0
+ * @link     https://github.com/sbarrat/cni
+ */
+require_once 'Sql.php';
+/**
+ * Aplicacion Class Doc Comment
+ * 
+ * @category Class
+ * @package  Aplicacion
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com>
+ * @license  http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons 3.0 by-sa 3.0
+ * @version  Release: 2.1
+ * @link     https://github.com/sbarrat/cni
+ *
  */
 class Aplicacion extends Sql
 {
     /**
-     * 
+     * Constructor de la funcion
      */
     public function __construct ()
     {
