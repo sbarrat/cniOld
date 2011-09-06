@@ -1,6 +1,7 @@
 <?php
-/*
- * FIXME: Si agregamos una repeticion a martes y miercoles, sale el domingo y tambien el sabado
+/**
+ * FIXME: Si agregamos una repeticion a martes y miercoles, 
+ * sale el domingo y tambien el sabado
  * FIXME: Segun como agregamos cosas a la hora de borrar no se borran del todo.
  */
 ?>
@@ -8,7 +9,7 @@
 <html lang="es">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Ocupaci&oacute;n de Despachos</title>
+	<title>Ocupación de Despachos</title>
 	<meta name="author" content="Ruben Lacasa Mas ruben@ensenalia.com">
 	<link href="estilo/agenda.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src='../js/prototype.js'></script>
@@ -22,7 +23,7 @@
 	<div id='mensajes_estado'></div>
 Agenda Despachos
 Vista:<select id='tipo_vista' onchange='cambia_vista()'>
-		<option selected value=''>--Opcion--</option>
+		<option selected value=''>--Opción--</option>
 		<option value='0'>Despachos</option>
 		<option value='1'>Semana</option>
 		<option value='2'>Interna</option>
