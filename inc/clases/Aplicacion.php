@@ -2,8 +2,32 @@
 /**
  * Aplicacion File Doc Comment
  * 
-
-     */
+ * Clase que controla las acciones con la base de datos
+ * 
+ * PHP Version 5.1.4
+ * 
+ * @category Aplicacion
+ * @package  cni/inc/clases
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com> 
+ * @license  http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+ * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
+ * @link     https://github.com/sbarrat/cni
+ */
+require_once 'Sql.php';
+/**
+ * Aplicacion Class Doc Comment
+ * 
+ * @category Class
+ * @package  Aplicacion
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com>
+ * @license  http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+ * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
+ * @version  Release: 2.1
+ * @link     https://github.com/sbarrat/cni
+ *
+ */
+class Aplicacion extends Sql
+{
     public function __construct ()
     {
         parent::__construct();

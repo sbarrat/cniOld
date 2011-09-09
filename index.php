@@ -95,7 +95,27 @@ if ( isset( $_SESSION['usuario'] ) ) {
 	<tr>
 		<td colspan='2'></td>
 	</tr>
-
+	</table>
+	</form>
+	<div class='signature'>
+	<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">
+	<img alt="Licencia Creative Commons" style="border-width:0" 
+		src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+	</a>
+	<br />
+	<span xmlns:dct="http://purl.org/dc/terms/" 
+		href="http://purl.org/dc/dcmitype/Text" property="dct:title" 
+		rel="dct:type">
+		CNI 2.1
+	</span> por 
+	<a xmlns:cc="http://creativecommons.org/ns#" 
+		href="http://sbarrat.wordpress.com" 
+		property="cc:attributionName" 
+		rel="cc:attributionURL">&copy;Rubén Lacasa::<?php echo date( 'Y' ); ?>
+	</a> 
+	</div>
+	</div>
+	<?php  } ?>
 </div>
 <div id='datos_interesantes'></div>
 <div id='debug'></div>
