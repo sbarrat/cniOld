@@ -95,8 +95,8 @@ class EntradasSalidas extends Sql
     function __construct ()
     {
         $this->fecha = New Fecha();
-        $this->meses = $this->fecha->get_meses();
-        $this->mesesCortos = $this->fecha->get_meses_cortos();
+        $this->meses = $this->fecha->getMeses();
+        $this->mesesCortos = $this->fecha->getMesesCortos();
         $this->anyos = array(date('Y') - 1, date('Y'));
         $this->anyoInicial = date('Y') - 1;
         $this->anyoFinal = date('Y');

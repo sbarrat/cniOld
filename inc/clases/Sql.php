@@ -92,18 +92,27 @@ class Sql
     }
     /**
      * Devuelve el nombre del campo
+     * 
      * @param integer $numeroCampo
      */
     function nombreCampo ( $numeroCampo )
     {
         return mysql_field_name( $this->_result, $numeroCampo );
     }
+    /**
+     * Prepara la variable para la consulta
+     * 
+     * @param string $var
+     */
     function escape ($var)
     {
-        return mysql_real_escape_string($var, $this->_conexion);
+        return mysql_real_escape_string( $var, $this->_conexion );
     }
+    /**
+     * Cierra la conexion a la base de datos
+     */
     function close ()
     {
-        mysql_close($this->_conexion);
+        mysql_close( $this->_conexion );
     }
 }
