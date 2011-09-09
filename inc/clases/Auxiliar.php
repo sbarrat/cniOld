@@ -109,4 +109,32 @@ class Auxiliar
 	return $color;
 
 }
+	/**
+	 * Se pasa un string o un array y comprueba su formato
+	 * si esta correcto devuelve el array o el string si
+	 * no esta correcto devuelve false
+	 * 
+	 * @param array|string $vars le pasamos una string o un array a comprobar
+	 * @return array|string|boolean devuelve el array, el string o falso si falla
+	 */
+	public static function sanitize( $vars )
+	{
+		$sanitize = false;
+		$fail = false;
+		if (is_array( $vars ) ) {
+			foreach ( $vars as $var ) {
+				if ( !ctype_alnum( $var ) ) {
+					$fail = true;
+				} 
+			}
+			if (!$fail) {
+				$sanitize = $vars;
+			}
+		} elseif ( is_string( $vars ) ) {
+			if ( ctype_alnum( $var )) {
+				$sanitize = $vars;
+			}
+		}
+		return $sanitize;
+	}
 }

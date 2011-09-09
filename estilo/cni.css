@@ -1328,3 +1328,14 @@ textarea
 	border-bottom-width:1px;
 	border-bottom-color:#7d0063;
 }
+#signature, #signature a
+{
+    font-size:8px;
+    font-family: arial, serif;
+    color:#888888;
+    text-align: right;
+    text-decoration: none;
+    font-style: italic;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}

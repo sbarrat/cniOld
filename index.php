@@ -13,28 +13,6 @@
  * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
  * @link     https://github.com/sbarrat/cni
  */
-require_once 'inc/variables.php';
-
-session_start();
-error_reporting( E_ALL ); //Todos los errores menos los deprecated
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link href="estilo/cni.css" rel="stylesheet" type="text/css"></link>
-<link href="estilo/calendario.css" rel="stylesheet" type="text/css"></link>
-<script type="text/javascript" src='js/prototype.js'></script>
-<script type="text/javascript" src="js/calendar.js"></script>
-<script type="text/javascript" src="js/lang/calendar-es.js"></script>
-<script type="text/javascript" src="js/calendar-setup.js"></script>
-<script type="text/javascript" src='js/independencia.js'></script>
-<title>Aplicacion Gestion Independencia Centro Negocios 2.1</title>
-</head>
-<body>
-<div id='cuerpo'>
-<?php
 /**
  * FIXME! Arreglar todos los enlaces de la nueva estructura
  * FIXME! No salen los clientes de oficina móvil en 
@@ -53,80 +31,74 @@ error_reporting( E_ALL ); //Todos los errores menos los deprecated
  * a la hora de imprimir, no sale el nombre del primer cliente.
  * FIXME! Al hacer clic en los clientes en la pantalla de avisos 
  * deberian abrirse los clientes
- * FIXME! Modificar el footer de la licencia
  */
-if ( isset( $_SESSION['usuario'] ) ) {
-    $aplicacion = new Aplicacion();
-    echo '<div id="menu_general">';
-    echo $aplicacion->menu();
-    echo '</div>';
-} else {
-	?>
-	<div id='registro'>
-	<div style='margin-left: 200px'><img src='imagenes/logotipo2.png'
-	width='538px' alt='The Perfect Place' /></div>
-	<div style='margin-left: 300px'>
-	<?php
-    if ( isset( $_GET["exit"] ) ) {
-        echo '<span class="ok">Sesion Cerrada</span>';
-    }
-    if ( isset( $_GET["error"] ) ) {
-        echo '<span class="ko">Usuario o Contraseña Incorrecta</span>';
-    }
-    ?>
-	<form id='login_usuario' onsubmit='validar();return false' method='post'>
-	<table width='30%' class="login">
-	<tr>
-		<td align='right'>Usuario:</td>
-		<td><input type='text' id="usuario" accesskey="u" tabindex="1" /></td>
-	</tr>
-	<tr>
-		<td align='right'>
-		Contraseña:
-		</td>
-		<td>
-		<input type='password' id="passwd" accesskey="c" tabindex="2" />
-		</td>
-	</tr>
-	<tr>
-		<td align='center' colspan="2"><input type='submit' class='boton'
-			accesskey="e" tabindex="3" value='[->]Entrar' /></td>
-	</tr>
-	<tr>
-		<td colspan='2'></td>
-	</tr>
-	</table>
-	</form>
-	<div class='signature'>
-	<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">
-	<img alt="Licencia Creative Commons" style="border-width:0" 
-		src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
-	</a>
-	<br />
-	<span xmlns:dct="http://purl.org/dc/terms/" 
-		href="http://purl.org/dc/dcmitype/Text" property="dct:title" 
-		rel="dct:type">
-		CNI 2.1
-	</span> por 
-	<a xmlns:cc="http://creativecommons.org/ns#" 
-		href="http://sbarrat.wordpress.com" 
-		property="cc:attributionName" 
-		rel="cc:attributionURL">&copy;Rubén Lacasa::<?php echo date( 'Y' ); ?>
-	</a> 
-	</div>
-	</div>
-	<?php  } ?>
-</div>
-<div id='datos_interesantes'></div>
-<div id='debug'></div>
-<?php
-if ( isset($_SESSION['usuario'] ) ) {
-    echo '<div id="avisos">';
-    include_once 'inc/avisos.php'; //Se muestran los avisos solo con el include
-    echo '</div>';
-    echo '<div id="resultados"></div>'; //linea de los resultados de busqueda
-    echo '<div id="formulario"></div>'; //linea del formulario
-}
+require_once 'inc/variables.php';
+session_start();
+error_reporting( E_ALL ); //Todos los errores menos los deprecated
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.8.custom.min.js"></script>
+<script type="text/javascript" src='js/independencia.js'></script>
+<link href="estilo/blueprint/screen.css" rel="stylesheet" type="text/css"></link>
+<link href="estilo/custom-theme/jquery-ui-1.8.8.custom.css" rel="stylesheet" type="text/css"></link>
+<link href="estilo/perfect.css" rel="stylesheet" type="text/css"></link>
+<title>Aplicacion Gestion Independencia Centro Negocios 2.1</title>
+</head>
+<body>
+<div id="cuerpo" class='container showgrid'>
+	<div class="span-12 prepend-5 last">
+	<!--  <img src='imagenes/logotipo2.png' width='538px' alt='The Perfect Place' /> -->
+	</div>
+	<br/>
+	<div class="span-12 prepend-6 last">
+		<form id="login" action="" method="post">
+			<fieldset>
+				<legend>Acceso Usuarios</legend>
+				<p>
+					<label for="usuario">Usuario:</label><br/>
+					<input type="text" class="title" name="usuario" id="usuario" />
+				</p>
+				<p>
+					<label for="password">Contraseña:</label><br/>
+					<input type="password" class="title" name="password" id="password" />
+				</p>
+				<p> 
+              		<input type="submit" value="Entrar" /> 
+              		<input type="reset" value="Cancelar" /> 
+            	</p> 
+				<div class='status span-10 prepend-1 last'></div>	
+				</fieldset>
+		</form>
+	</div>
+	<div id='footer' class='span-24 last'>
+		<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">
+			<img alt="Licencia Creative Commons" style="border-width:0" 
+			src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+		</a>
+		<br />
+		<span xmlns:dct="http://purl.org/dc/terms/" 
+			href="http://purl.org/dc/dcmitype/Text" property="dct:title" 
+			rel="dct:type">
+			CNI 2.1
+		</span> por 
+		<a xmlns:cc="http://creativecommons.org/ns#" 
+			href="http://sbarrat.wordpress.com" 
+			property="cc:attributionName" 
+			rel="cc:attributionURL">&copy;Rubén Lacasa::<?php echo date( 'Y' ); ?>
+		</a> 
+	</div>
+</div>
+<script type="text/javascript">
+$('#login').submit(function(){
+	$.post("inc/validacion.php",$("#login").serialize(),function(data){
+		$('#cuerpo').html(data);
+	});
+});
+</script>
 </body>
 </html>

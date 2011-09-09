@@ -26,4 +26,13 @@ function __autoload ($className)
     	throw new Exception($error);
     }
 }
+/**
+ * Comprueba si los parametros introducidos son correctos
+ * @param string|array $vars
+ * @return string|array|boolean
+ */
+function sanitize ( $vars )
+{
+    return $vars;
+}
 

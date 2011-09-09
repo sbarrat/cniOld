@@ -15,7 +15,7 @@
  * @link     https://github.com/sbarrat/cni
  */
 require_once 'variables.php';
-if ( isset($_POST['opcion']) && $_POST['opcion'] == 0) {
+/*if ( isset($_POST['opcion']) && $_POST['opcion'] == 0) {
     if ( ctype_alnum( $_POST['usuario'] ) && ctype_alnum( $_POST['passwd'] ) ) {
 		$usuario = new Usuarios();
     	if ( !$usuario->validacion( $_POST ) ) {
@@ -26,4 +26,16 @@ if ( isset($_POST['opcion']) && $_POST['opcion'] == 0) {
     } else {
     	header( "Location:../index.php?error=1" );
     }  
+}*/
+$usuario = new Usuarios();
+$errorText = "Usuario/Contraseña Invalido";
+if ( isset( $_POST['usuario']) && ( isset( $_POST['password'] ) ) ) {
+    $cleanVars = sanitize( $_POST );
+    if ( ( $cleanVars = sanitize( $_POST ) ) !== false ) {
+       $check = $usuario->validacion( $cleanVars );
+    } else {
+        $errorText = "Usuario/Contraseña Invalido";
+    }
+} else {
+    
 }

@@ -28,10 +28,6 @@ require_once 'Sql.php';
  */
 class Aplicacion extends Sql
 {
-    public function __construct ()
-    {
-        parent::__construct();
-    }
     /**
      * Enter description here ...
      */
@@ -69,15 +65,15 @@ class Aplicacion extends Sql
         return $tabla;
     }
     /**
-     * 
      * Enter description here ...
+     * 
      * @param unknown_type $vars
      */
-    public function formulario ( $vars ) {
-       
-	    $sql = "SELECT * FROM `" . parent::escape( $vars[ 'tabla' ] ) . "` 
-		WHERE `id` LIKE '" . parent::escape( $vars[ 'registro' ] ) ."'";
-	    
+    public function formulario ( $vars )
+    {
+	   
+    	$sql = "SELECT * FROM `" . parent::escape( $vars[ 'tabla' ] ) . "` 
+		WHERE `id` LIKE '" . parent::escape( $vars[ 'registro' ] ) ."'";   
 	    parent::consulta( $sql );
 	    $numeroCampos = 0;
 	    foreach ( parent::datos() as $dato ) {
@@ -86,15 +82,13 @@ class Aplicacion extends Sql
 			    $numeroCampos++;
 		    }
 	    }
-	
 	    $cadena = '
 		<form id="formulario_actualizacion" method="post" 
 		onSubmit="actualiza_registro(); return false">
 		<input type="hidden" id="opcion" value="0" />
 		<input type="hidden" id="idemp" value=" ' .$resultado[ 'Id' ] .'" />
 		<table cellpadding="0px" cellspacing="1px" class="formulario">';
-	
-        $desvio = '';
+		$desvio = '';
 	    if ( $vars[ 'tabla' ] == 'clientes' ) {
 		    $desvio = Auxiliar::desvioActivo( array(
 			    	'desvio' => $resultado[ 'desvio' ],
@@ -104,10 +98,11 @@ class Aplicacion extends Sql
 		            )
 			    );
 	    }
-	
 	    $colorCabezera 
-	    = Auxiliar::colorCabezera( $vars[ 'tabla' ], $resultado['Categoria'] );
-	
+	    	= Auxiliar::colorCabezera( 
+	    		$vars[ 'tabla' ], 
+	    		$resultado['Categoria'] 
+	    	);
 	    $cadena .= '<th height="24px" bgcolor="' . 
 	        $colorCabezera . '" color="#fff" align="left" width="100px">
 			<div id="edicion_actividad">
@@ -126,20 +121,17 @@ class Aplicacion extends Sql
 			<input class="boton" onclick="cierra_el_formulario()" 
 			value="[X] Cerrar" >
 			</th></tr>';
-
-	       $cadena .= $this->submenus( $vars ); 
-	
-	        $j = 0;
-	        $i = 1;
-	
+	    $cadena .= $this->submenus( $vars ); 
+	    $j = 0;
+	    $i = 1;
 	    foreach( $resultado as $key => $dato) {
-		    if ( $j % 2 == 0 )
+		    if ( $j % 2 == 0 ) {
 			    $cadena .= "</tr><tr>";
-		
+		    }
 		    $j++;
 		
 		    $cadena .= '<th align="left" valign="top" class="nombre_campo">
-			' . Auxiliar::traduce($this->aliasCampo( $key , $vars['tabla'] ) ) .
+			' . Auxiliar::traduce( $this->aliasCampo( $key, $vars['tabla'] ) ) .
 			'</th>
 			<td align="left" valign="top" class="valor_campo">' . 
 			
@@ -182,38 +174,27 @@ class Aplicacion extends Sql
 	    return $cadena;
     }
     
-/**
- * Devuelve el codigo de Negocio de la Empresa
- * 
- * Se le pasa como parametro el id de empresa y devuelve su codigo Negocio
- * 
- * @param string $idemp
- * @return string
- */
-public function codigoNegocio( $idemp )
-{
-	
-	$cadena = '';
-	
-	if ( isset( $idemp ) && $idemp != NULL ) {
-
-		
-		$sql = "SELECT * FROM `z_sercont` 
-		WHERE `idemp` LIKE '" . parent::escape( $idemp ) ."' 
-		AND `servicio` LIKE 'Codigo Negocio'";
-		
-		parent::consulta( $sql );
-	
-		if ( parent::totalDatos() >= 1 ) {
-			
-			$resultado = parent::datos();
-		
-			$cadena = '<span class="codigoNegocio">' . 
-			$resultado[ 0 ][ "valor" ] . '</span>';
+	/**
+ 	* Devuelve el codigo de Negocio de la Empresa
+ 	* 
+ 	* @param string $idemp id de empresa
+ 	* @return string codigo de negocio
+ 	*/
+	public function codigoNegocio( $idemp )
+	{
+		$cadena = '';
+		if ( isset( $idemp ) && $idemp != null ) {
+			$sql = "SELECT * FROM `z_sercont` 
+				WHERE `idemp` LIKE '" . parent::escape( $idemp ) ."' 
+				AND `servicio` LIKE 'Codigo Negocio'";
+			parent::consulta( $sql );
+			if ( parent::totalDatos() >= 1 ) {
+				$resultado = parent::datos();
+				$cadena = '<span class="codigoNegocio">' . 
+				$resultado[ 0 ][ "valor" ] . '</span>';
+			}
 		}
-	}
-	
-	return $cadena;
+		return $cadena;
     }
     
 /**
