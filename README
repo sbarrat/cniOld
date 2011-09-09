@@ -1,9 +1,9 @@
 CNI APP 2.1
-DEVEL by Ruben Lacasa Mas <rubendx@gmail.com>
+DEVEL by Ruben Lacasa Mas <ruben@ensenalia.com>
 http://sbarrat.wordpress.com
 16-08-2011
 
-Version 2.0d de la aplicación, podria ser una nueva versión en si misma
+Version 2.1 de la aplicación, podria ser una nueva versión en si misma
 pero en cuestiones de tecnologia va a ser la misma que en la que se ha venido
 trabajando desde el principio, por eso el salto a HTML5+CSS3+Jquery+PHP5.3 sera en la version 3. 
 En esta version se va a usar todo lo usado desde el principio del desarrollo de la aplicación pero se va a realizar una limpieza de su codigo, para adapatarlo a estandares y fijar problemas de carga y demas problemas, para asi quedar una versión totalmente estable, antes de comenzar con el desarrollo de la version 3, la cual tomara como punto de partida esta version.

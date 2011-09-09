@@ -1,29 +1,47 @@
 <?php
-require_once 'Sql.php';
 /**
+ * Aplicacion File Doc Comment
  * 
- * clases/Aplicacion.php Gestiona Aspectos de la aplicacion
- * 
- * Muestra partes de la aplicacion, como el menu
+ * Clase que controla las partes basicas de la aplicacion
  * 
  * PHP Version 5.1.4
  * 
- * @author Ruben Lacasa Mas <rubendx@gmail.com>
- * @version 2.1
+ * @category Aplicacion
+ * @package  cni/inc/clases
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com> 
+ * @license  http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+ * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
+ * @link     https://github.com/sbarrat/cni
+ */
+require_once 'Sql.php';
+/**
+ * AlumnosController Class Doc Comment
+ * 
+ * @category Class
+ * @package  Aplicacion
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com>
+ * @license  http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+ * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
+ * @version  Release: 2.1
+ * @link     https://github.com/sbarrat/cni
+ *
  */
 class Aplicacion extends Sql
 {
     /**
-     * 
+     * Enter description here...
      */
     public function __construct ()
     {
         parent::__construct();
     }
+    /**
+     * Enter description here ...
+     */
     public function menu ()
     {
         $sql = "SELECT * FROM `menus`";
-        parent::consulta($sql);
+        parent::consulta( $sql );
         $tabla = "<table width='100%'><tr>";
         foreach (parent::datos() as $dato) {
             switch ($dato['id']) {
@@ -53,7 +71,11 @@ class Aplicacion extends Sql
         $tabla .= '<div id="principal"></div>';
         return $tabla;
     }
-    
+    /**
+     * 
+     * Enter description here ...
+     * @param unknown_type $vars
+     */
     public function formulario ( $vars ) {
        
 	    $sql = "SELECT * FROM `" . parent::escape( $vars[ 'tabla' ] ) . "` 
@@ -86,8 +108,8 @@ class Aplicacion extends Sql
 			    );
 	    }
 	
-	    $colorCabezera = 
-	    Auxiliar::colorCabezera( $vars[ 'tabla' ], $resultado['Categoria'] );
+	    $colorCabezera 
+	    = Auxiliar::colorCabezera( $vars[ 'tabla' ], $resultado['Categoria'] );
 	
 	    $cadena .= '<th height="24px" bgcolor="' . 
 	        $colorCabezera . '" color="#fff" align="left" width="100px">

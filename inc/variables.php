@@ -1,17 +1,29 @@
 <?php
 /**
- * 
- * inc/variables.php Fichero de Autocarga de Clases
+ * Variables File Doc Comment
  * 
  * Se require de este fichero en la cabezara para la autocarga de las clases
- *  
+ * 
  * PHP Version 5.1.4
  * 
- * @author Ruben Lacasa Mas <rubendx@gmail.com>
- * @version 2.1
+ * @category Variables
+ * @package  cni/inc
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com> 
+ * @license  http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+ * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
+ * @link     https://github.com/sbarrat/cni
  */
-function __autoload ($class_name)
+/**
+ * Autocarga de Clases
+ * 
+ * @param string $className
+ */
+function __autoload ($className)
 {
-    include 'clases/' . $class_name . '.php';
+    if ( ctype_alpha( $className ) ) {
+		include 'clases/' . $className . '.php';
+    } else {
+    	throw new Exception($error);
+    }
 }
 

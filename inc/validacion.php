@@ -1,26 +1,29 @@
 <?php
 /**
- * inc/validacion.php Se encarga de validar el usuario y mostrar el menu
+ * Validacion File Doc Comment
  * 
- * Se le envian los datos de inicio de sesion, realiza la autentificacion
- * una vez autentificado muestra el menu de la aplicacion
+ * Se encarga de validar el usuario y mostrar el menu una vez autentificado
+ * el usuario
  * 
- * @author Ruben Lacasa Mas <rubendx@gmail.com>
- * @version 2.1
+ * PHP Version 5.1.4
+ * 
+ * @category Validacion
+ * @package  cni/inc
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com> 
+ * @license  http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+ * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
+ * @link     https://github.com/sbarrat/cni
  */
 require_once 'variables.php';
-
 if ( isset($_POST['opcion']) && $_POST['opcion'] == 0) {
-    
-    $usuario = new Usuarios();
-    $usuario->validacion( $_POST );
-      
-    if ( !$usuario->esValido() )
-        header("Location:../index.php?error=1");
-    else 
-        header("Location:../index.php");  
+    if ( ctype_alnum( $_POST['usuario'] ) && ctype_alnum( $_POST['passwd'] ) ) {
+		$usuario = new Usuarios();
+    	if ( !$usuario->validacion( $_POST ) ) {
+        	header( "Location:../index.php?error=1" );
+    	} else { 
+        	header( "Location:../index.php" );
+    	}
+    } else {
+    	header( "Location:../index.php?error=1" );
+    }  
 }
-
-
-
-

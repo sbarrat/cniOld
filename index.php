@@ -1,12 +1,22 @@
 <?php
-require_once 'inc/variables.php';
 /**
- * CNI version 2.1
+ * Index File Doc Comment
  * 
- * Aplicacion de gestion de centros de negocios
+ * Fichero principal de la aplicacion
+ * 
+ * PHP Version 5.1.4
+ * 
+ * @category Index
+ * @package  cni
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com> 
+ * @license  http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+ * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
+ * @link     https://github.com/sbarrat/cni
  */
+require_once 'inc/variables.php';
+
 session_start();
-error_reporting(E_ALL); //Todos los errores menos los deprecated
+error_reporting( E_ALL ); //Todos los errores menos los deprecated
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -43,27 +53,29 @@ error_reporting(E_ALL); //Todos los errores menos los deprecated
  * a la hora de imprimir, no sale el nombre del primer cliente.
  * FIXME! Al hacer clic en los clientes en la pantalla de avisos 
  * deberian abrirse los clientes
+ * FIXME! Modificar el footer de la licencia
  */
-if ( isset($_SESSION['usuario'] ) ) {
+if ( isset( $_SESSION['usuario'] ) ) {
     $aplicacion = new Aplicacion();
     echo '<div id="menu_general">';
     echo $aplicacion->menu();
     echo '</div>';
 } else {
-    ?>
-<div id='registro'>
-<div style='margin-left: 200px'><img src='imagenes/logotipo2.png'
+	?>
+	<div id='registro'>
+	<div style='margin-left: 200px'><img src='imagenes/logotipo2.png'
 	width='538px' alt='The Perfect Place' /></div>
-<div style='margin-left: 300px'>
+	<div style='margin-left: 300px'>
 	<?php
-    if (isset($_GET["exit"]))
+    if ( isset( $_GET["exit"] ) ) {
         echo '<span class="ok">Sesion Cerrada</span>';
-    if (isset($_GET["error"]))
+    }
+    if ( isset( $_GET["error"] ) ) {
         echo '<span class="ko">Usuario o Contraseña Incorrecta</span>';
+    }
     ?>
-	<form id='login_usuario' onsubmit='validar();return false'
-	method='post'>
-<table width='30%' class="login">
+	<form id='login_usuario' onsubmit='validar();return false' method='post'>
+	<table width='30%' class="login">
 	<tr>
 		<td align='right'>Usuario:</td>
 		<td><input type='text' id="usuario" accesskey="u" tabindex="1" /></td>
@@ -83,24 +95,30 @@ if ( isset($_SESSION['usuario'] ) ) {
 	<tr>
 		<td colspan='2'></td>
 	</tr>
-</table>
-</form>
+	</table>
+	</form>
+	</div>
+	<div style='margin-left: 300px'>
+	<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">
+	<img alt="Licencia Creative Commons" style="border-width:0" 
+		src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
+	</a>
+	<br />
+	<span xmlns:dct="http://purl.org/dc/terms/" 
+		href="http://purl.org/dc/dcmitype/Text" property="dct:title" 
+		rel="dct:type">CNI 2.1
+	</span> por 
+	<a xmlns:cc="http://creativecommons.org/ns#" 
+		href="http://sbarrat.wordpress.com" 
+		property="cc:attributionName" 
+		rel="cc:attributionURL">&copy;Rubén Lacasa::<?php echo date( 'Y' ); ?>
+	</a> 
+	</div>
+	</div>
+	<?php
+	}
+	?>
 </div>
-
-<div style='margin-left: 300px'>
-<p><span class="etiqueta">Desarrollado por sbarrat::<?php
-    echo date('Y');
-    ?></span>
-</p>
-<p><a href='http://www.ensenalia.com'><img src='imagenes/ensenalia.jpg'
-	width='128' /></a></p>
-</div>
-</div>
-<?php
-}
-?>
-</div>
-
 <div id='datos_interesantes'></div>
 <div id='debug'></div>
 <?php
