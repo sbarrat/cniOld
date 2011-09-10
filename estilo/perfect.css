@@ -1,0 +1,31 @@
+@CHARSET "UTF-8";
+/*
+Colores a aplicar
+base:#7d0063
+medio-oscuro:#5e174e
+oscuro:#51003f
+alto:#be309f
+medio-alto:#be56a7
+*/
+body {
+	font-size: 1em;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+	background:#888888;
+}
+#login{
+	color:#51003f;
+}
+#login fieldset {
+	background:#ffffff;
+}
+#footer, #footer a
+{
+    font-size:8px;
+    font-family: arial, serif;
+    color:#888888;
+    text-align: right;
+    text-decoration: none;
+    font-style: italic;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
