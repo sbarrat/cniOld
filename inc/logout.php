@@ -1,16 +1,19 @@
 <?php
 /**
+ * Logout File Doc Comment
  * 
- * inc/logout.php Cierre de sesion
+ * Cierre de la aplicacion
  * 
- * Cierra la session y vuelve a la pagina principal
- *  
  * PHP Version 5.1.4
  * 
- * @author Ruben Lacasa Mas <rubendx@gmail.com>
- * @version 2.1
+ * @category Logout
+ * @package  cni/inc/views/
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com> 
+ * @license  http://creativecommons.org/licenses/by-nc-nd/3.0/ 
+ * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
+ * @link     https://github.com/sbarrat/cni
  */
 session_start();
 session_destroy();
-header('Location:../index.php?exit=0');
+header( 'Location:../index.php' );
 

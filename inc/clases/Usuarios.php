@@ -44,7 +44,7 @@ class Usuarios extends Sql
     public function validacion ($vars)
     {
         parent::__construct();
-    	$contra = parent::escape( sha1( $vars['passwd'] ) );
+    	$contra = parent::escape( sha1( $vars['password'] ) );
         $usuario = parent::escape( $vars['usuario'] );
         $sql = "SELECT `nick`, `contra` 
 		FROM `usuarios` 

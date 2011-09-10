@@ -28,6 +28,7 @@ function __autoload ($className)
 }
 /**
  * Comprueba si los parametros introducidos son correctos
+ * 
  * @param string|array $vars
  * @return string|array|boolean
  */

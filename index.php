@@ -44,61 +44,26 @@ error_reporting( E_ALL ); //Todos los errores menos los deprecated
 <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.8.custom.min.js"></script>
 <script type="text/javascript" src='js/independencia.js'></script>
-<link href="estilo/blueprint/screen.css" rel="stylesheet" type="text/css"></link>
-<link href="estilo/custom-theme/jquery-ui-1.8.8.custom.css" rel="stylesheet" type="text/css"></link>
-<link href="estilo/perfect.css" rel="stylesheet" type="text/css"></link>
+<link rel="stylesheet" href="estilo/blueprint/screen.css" type="text/css"
+media="screen, projection" />
+<link rel="stylesheet" href="estilo/blueprint/print.css" type="text/css"
+media="print" />
+<!--[if lt IE 8]>
+<link rel="stylesheet" href="estilo/blueprint/ie.css" type="text/css"
+media="screen, projection" />
+<![endif]-->
+<link href="estilo/custom-theme/jquery-ui-1.8.8.custom.css" rel="stylesheet" type="text/css" />
+<link href="estilo/perfect.css" rel="stylesheet" type="text/css" />
 <title>Aplicacion Gestion Independencia Centro Negocios 2.1</title>
 </head>
 <body>
 <div id="cuerpo" class='container showgrid'>
-	<div class="span-12 prepend-5 last">
-	<!--  <img src='imagenes/logotipo2.png' width='538px' alt='The Perfect Place' /> -->
-	</div>
-	<br/>
-	<div class="span-12 prepend-6 last">
-		<form id="login" action="" method="post">
-			<fieldset>
-				<legend>Acceso Usuarios</legend>
-				<p>
-					<label for="usuario">Usuario:</label><br/>
-					<input type="text" class="title" name="usuario" id="usuario" />
-				</p>
-				<p>
-					<label for="password">Contraseña:</label><br/>
-					<input type="password" class="title" name="password" id="password" />
-				</p>
-				<p> 
-              		<input type="submit" value="Entrar" /> 
-              		<input type="reset" value="Cancelar" /> 
-            	</p> 
-				<div class='status span-10 prepend-1 last'></div>	
-				</fieldset>
-		</form>
-	</div>
-	<div id='footer' class='span-24 last'>
-		<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">
-			<img alt="Licencia Creative Commons" style="border-width:0" 
-			src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" />
-		</a>
-		<br />
-		<span xmlns:dct="http://purl.org/dc/terms/" 
-			href="http://purl.org/dc/dcmitype/Text" property="dct:title" 
-			rel="dct:type">
-			CNI 2.1
-		</span> por 
-		<a xmlns:cc="http://creativecommons.org/ns#" 
-			href="http://sbarrat.wordpress.com" 
-			property="cc:attributionName" 
-			rel="cc:attributionURL">&copy;Rubén Lacasa::<?php echo date( 'Y' ); ?>
-		</a> 
-	</div>
+<!-- Autogenerado -->	
 </div>
-<script type="text/javascript">
-$('#login').submit(function(){
-	$.post("inc/validacion.php",$("#login").serialize(),function(data){
-		$('#cuerpo').html(data);
-	});
-});
+<script type='text/javascript'>
+$('document').ready( function() {
+	$('#cuerpo').load('inc/views/index.php');
+} );
 </script>
 </body>
 </html>
