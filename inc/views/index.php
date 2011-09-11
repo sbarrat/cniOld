@@ -17,14 +17,8 @@ session_start();
 session_regenerate_id();
 if ( isset($_SESSION['usuario'] ) ) {
     include_once '../variables.php';
-    $aplicacion = new Aplicacion();
-    echo $aplicacion->menu();
-    $avisos = new Avisos();
-    echo $avisos->verAvisos();
-    
+    include_once 'menu.php';
+    include_once 'avisos.php';
 } else {
     include_once 'login.php';
 }
-echo "<pre>";
-var_dump( $_SERVER );
-echo "</pre>";

@@ -23,7 +23,7 @@ function __autoload ($className)
     if ( ctype_alpha( $className ) ) {
 		include 'clases/' . $className . '.php';
     } else {
-    	throw new Exception($error);
+    	throw new Exception( "Errror: Revise la configuracion" );
     }
 }
 /**

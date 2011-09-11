@@ -35,7 +35,8 @@ class Aplicacion extends Sql
     {
         $sql = "SELECT * FROM `menus`";
         parent::consulta( $sql );
-        $tabla = "<table width='100%'><tr>";
+        return parent::datos();
+        /*$tabla = "<table width='100%'><tr>";
         foreach (parent::datos() as $dato) {
             switch ($dato['id']) {
                 case 7:
@@ -62,7 +63,7 @@ class Aplicacion extends Sql
 			</th>';
         $tabla .= '</tr></table>';
         $tabla .= '<div id="principal"></div>';
-        return $tabla;
+        return $tabla;*/
     }
     /**
      * Enter description here ...

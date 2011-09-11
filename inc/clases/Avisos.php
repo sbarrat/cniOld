@@ -90,7 +90,7 @@ class Avisos extends Sql
      * @param boolean $contratos
      * @return string $texto
      */
-    public function verAvisos ($cumples = true, $contratos = true)
+    /*public function verAvisos ($cumples = true, $contratos = true)
     {
         $texto = '';
         $cierreSimple = '<tr><th colspan="2"><span class="boton" 
@@ -99,7 +99,7 @@ class Avisos extends Sql
         /**
          * Cabezera para cumpleaños y contratos
          */
-        if ($cumples && $contratos) {
+        /*if ($cumples && $contratos) {
             $texto .= '<input type="button" class="boton" 
             	value="[<]Ocultar Avisos" 
 				onclick="cerrar_avisos()"/>
@@ -159,7 +159,7 @@ class Avisos extends Sql
         
         $texto .= '</td></tr></table>';
         echo $texto;
-    } 
+    } */
     /**
      * Muestra los  que cumplen años los proximos 40 dias de la central
      * 
@@ -312,5 +312,22 @@ class Avisos extends Sql
 				Nadie Finaliza contrato en los proximos dias</td></tr>';
         }
         return $cadena;
+    }
+    /**
+     * Enter description here ...
+     */
+    public function verCumples() 
+    {
+        $this->_cumplesProximosCentral();
+        $this->_cumplesProximosCentro();
+        $this->_cumplesProximosEmpresa();
+        return $this->_cumples;
+    }
+    /**
+     * Enter description here ...
+     */
+    public function verAvisos()
+    {
+        return $this->_finalizanContrato();
     }
 }

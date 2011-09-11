@@ -18,8 +18,10 @@ body {
 #login fieldset {
 	background:#ffffff;
 }
-#footer, #footer a
-{
+#menu {
+	font-size: 0.65em;
+}
+#footer, #footer a {
     font-size:8px;
     font-family: arial, serif;
     color:#888888;
