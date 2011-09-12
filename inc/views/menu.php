@@ -27,11 +27,9 @@ if ( isset($_SESSION['usuario'] ) ) {
     }
     ?>
 		<div class="opcion span-2 last" id="Salir">
-			
-				<img src="imagenes/salir.png" width="32" alt="Salir"/>
-				<br/>
-				Salir
-			
+			<img src="imagenes/salir.png" width="32" alt="Salir"/>
+			<br/>
+			Salir
 		</div>
 	</div>
 	<div id="aplicacion">
@@ -41,8 +39,7 @@ if ( isset($_SESSION['usuario'] ) ) {
 	$('.opcion').click( function() {
 		$.post('inc/views/aplicacion.php','opcion='+this.id, function(data){
 			$('#aplicacion').html(data);
-			});
-		
+			});		
 	});
 	</script>
-<?php  } ?>
+    <?php  } 

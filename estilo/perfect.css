@@ -19,7 +19,7 @@ body {
 	background:#ffffff;
 }
 #menu {
-	font-size: 0.65em;
+	font-size: 0.75em;
 }
 #footer, #footer a {
     font-size:8px;
@@ -30,4 +30,7 @@ body {
     font-style: italic;
     margin-right: 8px;
     margin-bottom: 8px;
+}
+.linea {
+	font-size:0.75em;
 }

@@ -27,11 +27,6 @@ require_once 'Sql.php';
 class Avisos extends Sql
 {
     /**
-     * Chivato que dice si alguien cumple años o no en cada seccion
-     * @var boolean
-     */
-    private $_nadieCumple = 0;
-    /**
      * Controla la ordenacion de la vista
      * @var string
      */
@@ -49,117 +44,6 @@ class Avisos extends Sql
         parent::__construct();
         $this->_orden = (date( 'm' ))? " DESC ":"";
     }
-    /**
-     * Si nadie cumple años muestra el mensaje
-     * 
-     * @param string $cuando
-     * @return string $texto
-     */
-    private function _nadieCumple( $cuando )
-    {
-        $texto = '';
-        if ( $this->_nadieCumple == 0 ) {
-            $texto = '<tr><td class="' . Auxiliar::clase() . '" 
-                colspan="2"> Nadie cumple los años ' . $cuando . '
-				</td></tr>';
-        }
-        $this->_nadieCumple = 0;
-        return $texto;
-    }
-    /**
-     * Muestra en la cabezera si el aviso es para hoy o mañana
-     * 
-     * @param string $var
-     * @return string $cuando
-     */
-    private function _todayOrTomorrow( $var )
-    {
-        $cuando = $var;
-        if ( strtotime( $var.'-'.date( 'Y' ) ) == strtotime( 'TODAY' ) ) {
-            $cuando = '<strong>HOY</strong>';
-        }
-        elseif ( strtotime( $var.'-'.date( 'Y' ) ) == strtotime( '+1 DAY' ) ) {
-            $cuando = '<strong>MAÑANA</strong>';
-        }
-        return $cuando;    
-    }
-    /**
-     * Muestra los avisos
-     * 
-     * @param boolean $cumples
-     * @param boolean $contratos
-     * @return string $texto
-     */
-    /*public function verAvisos ($cumples = true, $contratos = true)
-    {
-        $texto = '';
-        $cierreSimple = '<tr><th colspan="2"><span class="boton" 
-                onclick="cierralo()" onkeypress="cierralo()">[X] Cerrar</span>
-                </tr></th>';
-        /**
-         * Cabezera para cumpleaños y contratos
-         */
-        /*if ($cumples && $contratos) {
-            $texto .= '<input type="button" class="boton" 
-            	value="[<]Ocultar Avisos" 
-				onclick="cerrar_avisos()"/>
-				<table class="tabla">
-				<tr><th colspan="2">Cartel de Avisos</th></tr>
-				<tr>
-				<th>Cumplea&ntilde;os</th>
-				<th>Contratos</th>
-				</tr>
-				<tr><td valign="top">';
-        }
-        if ( $cumples ) {
-            $texto .= '<table class="tabla">';
-            if ( !$contratos ) {
-                $texto .= $cierreSimple;
-            }
-            $texto .= '<tr><th colspan="2">Proximos Cumpleaños</th></tr>';
-            $this->_cumplesProximosCentral();
-            $this->_cumplesProximosEmpresa();
-            $this->_cumplesProximosCentro();
-          
-            
-            if ($this->_nadieCumple == 0) {
-                $texto .= '<tr><td class="' . Auxiliar::clase() . '" 
-                colspan="2"> Nadie cumple los años en los proximos 40 dias
-				</td></tr>';
-            } else {
-                sort( $this->_cumples );
-                foreach ($this->_cumples as $cumple) {
-                    $texto .= '<tr class="' . Auxiliar::clase() . '">
-    					<td>' . $this->_todayOrTomorrow( $cumple[1] ) . '</td>
-    					<td>' . $cumple[2];
-                    
-                    if ($cumple[4] != null) {
-                        $texto .= 
-                        ' de <a href="javascript:muestra(' . $cumple[3] . ')">
-    					' . $cumple[4] . '</a>';
-                    }
-                    $texto .= '</td></tr>';
-                }
-            }
-            $texto .= '</table>';
-        }
-        
-        if ($cumples && $contratos) {
-            $texto .= '</td><td valign="top">';
-        }
-        if ( $contratos ) {
-            $texto .= '<table class="tabla">';
-            
-            if ( !$cumples ) {
-                $texto .= $cierreSimple;
-            }
-            $texto .= $this->_finalizanContrato();
-            $texto .= '</table>';
-        }
-        
-        $texto .= '</td></tr></table>';
-        echo $texto;
-    } */
     /**
      * Muestra los  que cumplen años los proximos 40 dias de la central
      * 
@@ -185,7 +69,6 @@ class Avisos extends Sql
  		DAY( `pcentral`.`cumple` ) ";
         parent::consulta( $sql );
         if (parent::totalDatos() != 0) {
-            $this->_nadieCumple = 1;
             foreach (parent::datos() as $resultado) {
                 $this->_cumples[] = array(
                     Fecha::invierte( Fecha::diaYmes( $resultado['cumple'] ) ), 
@@ -224,7 +107,6 @@ class Avisos extends Sql
  		DAY( `pempresa`.`cumple` )";
         parent::consulta( $sql );
         if (parent::totalDatos() != 0) {
-            $this->_nadieCumple = 1;
             foreach (parent::datos() as $resultado) {
                 $this->_cumples[] = array(
                     Fecha::invierte( Fecha::diaYmes( $resultado['cumple'] ) ), 
@@ -257,7 +139,6 @@ class Avisos extends Sql
 			) ";
         parent::consulta( $sql );
         if (parent::totalDatos() != 0) {
-            $this->_nadieCumple = 1;
             foreach (parent::datos() as $resultado) {
                 $this->_cumples[] = array(
                     Fecha::invierte( Fecha::cambiaf( $resultado['FechNac'] ) ), 
@@ -292,41 +173,29 @@ class Avisos extends Sql
 		AND `clientes`.`Estado_de_cliente` != 0 
 		ORDER by MONTH( `renovacion` ) ASC, 
 		DAY( `renovacion` ) ASC";
-        
         parent::consulta( $sql );
-        $cadena = '<tr>
-				<th>Dia</th>
-				<th>Finalizan contrato en los Proximos dias</th>
-				</tr>';
-        if (parent::totalDatos() >= 1) {
-            foreach (parent::datos() as $resultado) {
-                $cadena .= '<tr><td class="' . Auxiliar::clase() . '">' .
-                    Fecha::cambiaf( $resultado['renovacion'] ) . '</td>
-					<td class="' . Auxiliar::clase() . '">
-					<a href="javascript:muestra(' .$resultado['idemp'] . ')" >
-					' . Auxiliar::traduce( $resultado['Nombre'] ) . 
-					'</a></td></tr>';
-            }
-        } else {
-            $cadena .= '<tr><td colspan="2" class="' . Auxiliar::clase() . '">
-				Nadie Finaliza contrato en los proximos dias</td></tr>';
-        }
-        return $cadena;
+        return parent::datos();    
     }
+    
     /**
-     * Enter description here ...
+     * Devuelve los datos de los que cumplen años
+     * 
+     * @return array $this->_cumples Datos de los cumpleaños
      */
     public function verCumples() 
     {
         $this->_cumplesProximosCentral();
         $this->_cumplesProximosCentro();
         $this->_cumplesProximosEmpresa();
+        sort( $this->_cumples );
         return $this->_cumples;
     }
     /**
-     * Enter description here ...
+     * Devuelve los datos de los que finalizan contrato
+     * 
+     * @return array $this->_finalizanContrato Datos de los contratos
      */
-    public function verAvisos()
+    public function verContratos()
     {
         return $this->_finalizanContrato();
     }
