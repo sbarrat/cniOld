@@ -31,8 +31,8 @@
 				<input type="password" class="title" name="password" id="password" />
 			</p>
 			<p> 
-              	<input type="submit" value="Entrar" /> 
-              	<input type="reset" value="Cancelar" /> 
+              	<input type="submit" class="title" value="Entrar [->]" /> 
+              	 
             </p> 
 			<div class='status span-10 last'></div>	
 		</fieldset>
