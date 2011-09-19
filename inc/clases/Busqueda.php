@@ -1,25 +1,78 @@
 <?php
+/**
+ * Busqueda File Doc Comment
+ * 
+ * Clase que gestiona las Busquedas
+ * 
+ * PHP Version 5.1.4
+ * 
+ * @category Busqueda
+ * @package  inc/clases
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com> 
+ * @license  http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons by-sa 3.0
+ * @link     https://github.com/sbarrat/cni
+ */
 require_once 'Sql.php';
-/** 
- * @author ruben
+/**
+ * Busqueda Class Doc Comment
  * 
- * 
+ * @category Class
+ * @package  Busqueda
+ * @author   Ruben Lacasa Mas <ruben@ensenalia.com>
+ * @license  http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons 3.0 by-sa 3.0
+ * @version  Release: 2.1
+ * @link     https://github.com/sbarrat/cni
+ *
  */
 class Busqueda extends Sql
 {
+    
+    private $_tablas = array ('clientes','servicios2','proveedores','listin');
+    private $_resultado = array ();
     /**
+     * Busqueda de un dato en las tablas en las que se puede buscar
      * 
+     * @param string $term
      */
-    public function __construct ()
+    public function buscar ( $term )
     {
-        parent::__construct();
+        $term = parent::escape( $term );
+        $this->_busqueda( $term );
+        return $this->_resultado;
     }
     /**
-     * Busqueda de un dato en una tabla
-     * @param array $vars
+     * Enter description here ...
+     * 
+     * @param string $term
+     */
+    private function _busqueda ( $term )
+    {
+        foreach ( $this->_tablas as $tabla ) {
+            $sql = "SELECT `Id`, `Nombre` FROM `". $tabla . "` 
+        	WHERE `Nombre` LIKE '%" . $term . "%' 
+        	ORDER BY `Nombre`";
+            parent::consulta( $sql );
+            $this->_preparaResultado( $tabla );
+        }
+    }
+    /**
+     * Enter description here ...
+     * 
      * @param string $tabla
      */
-    public function BusquedaSimple ($vars)
+    private function _preparaResultado( $tabla )
+    {
+        $datos = array();
+        foreach ( parent::datos() as $dato ) {
+            $datos[] = array(
+            	'id'=>$dato['Id'], 
+            	'value'=>$dato['Nombre'], 
+            	'tabla'=>$tabla
+            );
+        }
+        $this->_resultado = array_merge( $this->_resultado, $datos );
+    }
+    /*public function busquedaSimple ($vars)
     {
         
         $cadena = '';
@@ -67,11 +120,11 @@ class Busqueda extends Sql
         return $cadena;
     
     }
-    
+    */
     /**
      * Muestra el formulario de busqueda avanzada
      */
-    public function FormularioBusquedaAvanzada ()
+    /*public function FormularioBusquedaAvanzada ()
     {
         $cadena = '
 	<table class="tabla">
@@ -108,7 +161,7 @@ class Busqueda extends Sql
      * @param string $texto texto buscado
      * @return string devolvemos los datos con formato
      */
-    private function procesaDatosBusquedaAvz ($sql, $campos, $tabla, $texto)
+   /* private function procesaDatosBusquedaAvz ($sql, $campos, $tabla, $texto)
     {
         $cadena = '<p>
         <strong>
@@ -146,7 +199,7 @@ class Busqueda extends Sql
      * Busqueda avanzada de varios datos
      * @param array $vars
      */
-    public function BusquedaAvanzada ($vars)
+    /*public function BusquedaAvanzada ($vars)
     {
         $cadena = '';
          
@@ -159,7 +212,7 @@ class Busqueda extends Sql
         /**
          * Chequeamos si es un telefono
          */
-        $token = preg_replace("/ /", "//", $texto);
+      /*  $token = preg_replace("/ /", "//", $texto);
         if (is_numeric($token) && strlen($token) == 9) {
             $texto = $token;
             $vars['texto'] = $token;
@@ -184,7 +237,7 @@ class Busqueda extends Sql
         /**
          * Consultamos telefonos de cliente
          */
-        $sql = "SELECT `id`, `Nombre` FROM `clientes` 
+       /* $sql = "SELECT `id`, `Nombre` FROM `clientes` 
 		WHERE 
 		(  REPLACE( `Tfno1`, ' ', '' ) LIKE '%" .
          $texto . "%' 
@@ -205,7 +258,7 @@ class Busqueda extends Sql
         /**
          * Consultamos telefonos de empleados
          */
-        $sql = "SELECT `c`.`id`, `p`.`nombre`, `p`.`apellidos`, `c`.`Nombre` 
+       /* $sql = "SELECT `c`.`id`, `p`.`nombre`, `p`.`apellidos`, `c`.`Nombre` 
 		FROM `pempresa` as `p` 
 		INNER JOIN `clientes` as `c` 
 		ON `c`.`id` = `p`.`idemp`
@@ -224,7 +277,7 @@ class Busqueda extends Sql
         /**
          * consultamos telefonos de pcentral
          */
-        $sql = "SELECT `c`.`id` ,`p`.`persona_central`, `c`.`Nombre` 
+       /* $sql = "SELECT `c`.`id` ,`p`.`persona_central`, `c`.`Nombre` 
 		FROM `pcentral` as `p` 
 		INNER JOIN `clientes` as `c` 
 		ON `c`.`id` = `p`.`idemp` 
@@ -243,7 +296,7 @@ class Busqueda extends Sql
         /**
          * Consultamos datos de proveedores
          */
-        $sql = "SELECT `c`.`id`, `c`.`Nombre`, `p`.`nombre`, `p`.`apellidos`
+       /* $sql = "SELECT `c`.`id`, `c`.`Nombre`, `p`.`nombre`, `p`.`apellidos`
 		FROM `proveedores` AS `c`
 		left JOIN `pproveedores` AS `p` ON `c`.`id` = `p`.`idemp`
 		WHERE `c`.`Nombre` LIKE '%" . $texto . "%'
@@ -264,7 +317,7 @@ class Busqueda extends Sql
         /**
          * Consultamos en telecomunicaciones
          */
-        $sql = "Select `c`.`ID`, `c`.`Nombre`, `z`.`valor`, `z`.`servicio` 
+       /* $sql = "Select `c`.`ID`, `c`.`Nombre`, `z`.`valor`, `z`.`servicio` 
         FROM `clientes` AS `c`
 		INNER JOIN `z_sercont` AS `z` 
 		ON `c`.`ID` LIKE `z`.`idemp`
@@ -283,6 +336,6 @@ class Busqueda extends Sql
         /**
          * Mostramos el resultado final
          */
-        echo $cadena;
-    }
+       /* echo $cadena;
+    }*/
 }

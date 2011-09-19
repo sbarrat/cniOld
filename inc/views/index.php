@@ -19,6 +19,7 @@ if ( isset($_SESSION['usuario'] ) ) {
     include_once '../variables.php';
     include_once 'menu.php';
     include_once 'busqueda.php';
+    include_once 'principal.php';
     include_once 'avisos.php';
 } else {
     include_once 'login.php';

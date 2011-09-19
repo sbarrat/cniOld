@@ -19,14 +19,18 @@ if ( isset($_SESSION['usuario'] ) ) {
     ?>
 	<div id="menu" class="span-24 last">
     <?php 
+    $categoriasBaneadas = array('Avisos','Cumples','Busqueda Avanzada');
     foreach ( $opciones as $opcion ) {
-        echo '<div class="opcion span-2" id="' . $opcion['nombre'] .'">
+        if ( in_array( $opcion['nombre'], $categoriasBaneadas ) ) {
+            continue;
+        }
+        echo '<div class="opcion small span-3" id="' . $opcion['nombre'] .'">
     		<img src="' . $opcion['imagen'] . '" 
 				alt="' . $opcion['nombre'] . '" width="32" /><br/>' . 
             $opcion['nombre'] . '</div>';
     }
     ?>
-		<div class="opcion span-2 last" id="Salir">
+		<div class="opcion small span-2 last" id="Salir">
 			<img src="imagenes/salir.png" width="32" alt="Salir"/>
 			<br/>
 			Salir

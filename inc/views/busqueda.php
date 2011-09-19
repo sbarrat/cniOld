@@ -17,16 +17,22 @@ if ( isset ( $_SESSION['usuario'] ) ) {
     ?>
     <div class='span-24 ui-widget'>
    
-    <label for='buscar'>Buscar:</label>
+    <label for='buscar' class='small'>Buscar:</label>
     <input type='text' class='text' id='buscar' name='buscar' />
-  
     </div>
+ 
     <script type="text/javascript">
     $("#buscar").autocomplete({
 		source: "inc/views/resultados.php",
 		minLength: 2,
 		maxRows: 12,
-		select: function(event, ui) {}
+		select: function(event, ui) {
+			$.post("inc/views/resultados.php",
+					{id=ui.item.id;value=ui.item.value;tabla=ui.item.tablag}
+			function(data) {
+				$("#principal").html(data);
+				};
+		}
     });
     </script>
     <?php 
