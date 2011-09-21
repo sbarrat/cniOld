@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ * Borrar
  * inc/datos.php Gestion de avisos de Cumpleaños, Contratos, Busqueda Avanzada
  * 
  * Muestra los cumpleaños de los clientes, agrupados por los de hoy,

@@ -97,10 +97,10 @@ class EntradasSalidas extends Sql
         $this->fecha = New Fecha();
         $this->meses = $this->fecha->get_meses();
         $this->mesesCortos = $this->fecha->get_meses_cortos();
-        $this->anyos = array(date('Y') - 1, date('Y'));
-        $this->anyoInicial = date('Y') - 1;
-        $this->anyoFinal = date('Y');
-        $this->anyoActual = date('Y');
+        $this->anyos = array( date( 'Y' ) - 1, date( 'Y' ) );
+        $this->anyoInicial = date( 'Y' ) - 1;
+        $this->anyoFinal = date( 'Y' );
+        $this->anyoActual = date( 'Y' );
         $this->_categoriasClientes = $this->categorias();
     }
     
@@ -117,7 +117,7 @@ class EntradasSalidas extends Sql
     /*
 	 * Establecemos el tipo de vista
 	 */
-    public function setTipoVista ($vista)
+    public function setTipoVista ( $vista )
     {
         $this->_tipoVista = $this->_tipoVistas[$vista];
     }
@@ -125,7 +125,7 @@ class EntradasSalidas extends Sql
     /*
 	 * Establecemos el tipo de dato
 	 */
-    public function setTipoDato ($dato)
+    public function setTipoDato ( $dato )
     {
         $this->_tipoDato = $this->_tipoDatos[$dato];
     }

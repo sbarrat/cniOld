@@ -37,7 +37,7 @@ class Sql
      * Constructor de clase, crea una conexion persistente a la base
      * de datos
      */
-    function __construct ()
+    private function __construct ()
     {
         $this->_conexion 
         	= mysql_pconnect( $this->_host, $this->_username, $this->_password );

@@ -28,10 +28,10 @@ if ( isset ( $_SESSION['usuario'] ) ) {
 		maxRows: 12,
 		select: function(event, ui) {
 			$.post("inc/views/resultados.php",
-					{id=ui.item.id;value=ui.item.value;tabla=ui.item.tablag}
-			function(data) {
-				$("#principal").html(data);
-				};
+					{id=ui.item.id;value=ui.item.value;tabla=ui.item.tablag},
+					function(data) {
+						$("#principal").html(data);
+					};
 		}
     });
     </script>

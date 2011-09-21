@@ -15,7 +15,6 @@
  */
 session_start();
 session_regenerate_id();
-
 $result = array ("Busqueda Invalida");
 if ( isset( $_SESSION['usuario'] ) )
 {
@@ -25,9 +24,6 @@ if ( isset( $_SESSION['usuario'] ) )
         $cleanTerm = htmlentities( $_GET['term'] );
         $result = $busqueda->buscar( $cleanTerm );
         echo json_encode( $result );
-    }
-    if ( isset ( $_POST['tabla']) ) {
-        
-    }
+    } 
 } 
 

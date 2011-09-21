@@ -28,6 +28,8 @@ require_once 'Sql.php';
  */
 class Aplicacion extends Sql
 {
+    
+  
     /**
      * Enter description here ...
      */
