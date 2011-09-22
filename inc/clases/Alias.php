@@ -18,7 +18,7 @@ require_once 'Sql.php';
  * Alias Class Doc Comment
  * 
  * @category Class
- * @package  Personas
+ * @package  Alias
  * @author   Ruben Lacasa Mas <ruben@ensenalia.com>
  * @license  http://creativecommons.org/licenses/by-nc-nd/3.0/ 
  * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
@@ -42,6 +42,7 @@ class Alias extends Sql
     {
         if ( isset ($tabla) && is_string( $tabla ) ){
              $this->_tabla = $tabla;
+             $this->_setCampos();
         } else {
              throw new Exception("Debe especificar tabla");
         }
@@ -60,13 +61,16 @@ class Alias extends Sql
      * 
      * @return array
      */
-    public function setCampos()
+    private function _setCampos()
     {
         $sql = sprintf( 
         "SELECT * FROM `alias` 
-        WHERE `tabla` like %s", parent::escape( $this->_tabla ) );
+        WHERE `tabla` like '%s' 
+        AND `mostrar` like 'Si'
+        ORDER BY `orden`", parent::escape( $this->_tabla ) );
         parent::consulta( $sql );
-        $this->_campos = parent::datos();
+        
+        $this->_campos =  parent::datos();
     }
     /**
      * Devuelve los campos
@@ -78,5 +82,20 @@ class Alias extends Sql
         return $this->_campos;
         
     }
+    /**
+     * En caso de campo select devolvemos los valores que tiene
+     * 
+     * @param string $tabla
+     * @return array 
+     */
+    public function getValoresSelect( $tabla )
+    {
+        $sql = sprintf(
+        "SELECT * FROM `%s`", parent::escape( $tabla )
+        );
+        parent::consulta( $sql );
+        return parent::datos();
+    }
+    
     
 }

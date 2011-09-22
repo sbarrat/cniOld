@@ -36,24 +36,24 @@ require_once 'inc/variables.php';
 session_start();
 error_reporting( E_ALL ); //Todos los errores menos los deprecated
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui-1.8.8.custom.min.js"></script>
-<script type="text/javascript" src='js/independencia.js'></script>
-<link rel="stylesheet" href="estilo/blueprint/screen.css" type="text/css"
-media="screen, projection" />
-<link rel="stylesheet" href="estilo/blueprint/print.css" type="text/css"
-media="print" />
+<meta charset="utf-8" >
+<meta name="author" content="Ruben Lacasa" >
+<script src="js/jquery-1.4.4.min.js"></script>
+<script src="js/jquery-ui-1.8.8.custom.min.js"></script>
+<script src='js/independencia.js'></script>
+<link rel="stylesheet" href="estilo/blueprint/screen.css" 
+media="screen, projection">
+<link rel="stylesheet" href="estilo/blueprint/print.css" 
+media="print">
 <!--[if lt IE 8]>
-<link rel="stylesheet" href="estilo/blueprint/ie.css" type="text/css"
+<link rel="stylesheet" href="estilo/blueprint/ie.css" 
 media="screen, projection" />
 <![endif]-->
-<link href="estilo/custom-theme/jquery-ui-1.8.8.custom.css" rel="stylesheet" type="text/css" />
-<link href="estilo/perfect.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="estilo/custom-theme/jquery-ui-1.8.8.custom.css">
+<link rel="stylesheet" href="estilo/perfect.css" >
 <title>Aplicacion Gestion Independencia Centro Negocios 2.1</title>
 </head>
 <body>
