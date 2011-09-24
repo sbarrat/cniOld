@@ -21,6 +21,8 @@ if ( isset( $_SESSION['usuario']) ) {
     
     if ( ctype_alnum( $_POST['opcion'] ) ) {
         $cleanOpt = $_POST['opcion'];
+        include_once 'test.php';
+        
     }
     if ( $cleanOpt == 'Salir' ) {
         header( "Location:../logout.php" );
