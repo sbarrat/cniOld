@@ -13,7 +13,7 @@
  * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
  * @link     https://github.com/sbarrat/cni
  */
-require_once 'Sql.php';
+require_once 'DbConnection.php';
 /**
  * Aplicacion Class Doc Comment
  * 
@@ -26,18 +26,24 @@ require_once 'Sql.php';
  * @link     https://github.com/sbarrat/cni
  *
  */
-class Aplicacion extends Sql
+class Aplicacion
 {
     
-  
+    private $_conexion = null;
+    /**
+     * Enter description here ...
+     */
+    public function __construct() 
+    {
+        $this->_conexion = DbConnection::connect();
+    }
     /**
      * Enter description here ...
      */
     public function menu ()
     {
         $sql = "SELECT * FROM `menus`";
-        parent::consulta( $sql );
-        return parent::datos();
+        return $this->_conexion->query( $sql );    
     }
     /**
      * Enter description here ...

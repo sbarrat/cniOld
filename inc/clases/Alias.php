@@ -13,7 +13,7 @@
  * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
  * @link     https://github.com/sbarrat/cni
  */
-require_once 'Sql.php';
+require_once 'DbConnection.php';
 /**
  * Alias Class Doc Comment
  * 
@@ -26,12 +26,23 @@ require_once 'Sql.php';
  * @link     https://github.com/sbarrat/cni
  *
  */
-class Alias extends Sql
+class Alias
 {
     
     private $_tabla = null;
     private $_campos = array();
+    private $_conexion = null;
     
+    /**
+     * Establecemos los campos de la tabla y los valores
+     * 
+     * @param unknown_type $name
+     * @param unknown_type $value
+     */
+    public function __set( $name, $value )
+    {
+        $this->_campos[$name] = $value;
+    }
     /**
      * Establece la tabla a consultar
      * 
@@ -40,6 +51,10 @@ class Alias extends Sql
      */
     public function setTabla( $tabla = null )
     {
+        if ( is_null( $this->_conexion ) ) {
+            $this->_conexion = DbConnection::connect();
+        }
+        
         if ( isset ($tabla) && is_string( $tabla ) ){
              $this->_tabla = $tabla;
              $this->_setCampos();

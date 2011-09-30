@@ -13,7 +13,7 @@
  * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
  * @link     https://github.com/sbarrat/cni
  */
-require_once 'Sql.php';
+require_once 'DbConnection.php';
 /**
  * AlumnosController Class Doc Comment
  * 
@@ -26,7 +26,7 @@ require_once 'Sql.php';
  * @link     https://github.com/sbarrat/cni
  *
  */
-class Usuarios extends Sql
+class Usuarios
 {
     /**
      * Si no se dice otra cosa el usuario nunca es valido
@@ -43,23 +43,25 @@ class Usuarios extends Sql
      */
     public function validacion ($vars)
     {
-        parent::__construct();
-    	$contra = parent::escape( sha1( $vars['password'] ) );
-        $usuario = parent::escape( $vars['usuario'] );
+        $conexion = DbConnection::connect();
+    	$password = sha1( $vars['password'] );
+        $usuario = $vars['usuario'];
         $sql = "SELECT `nick`, `contra` 
 		FROM `usuarios` 
-		WHERE `nick` LIKE '$usuario' 
-		AND `contra` LIKE '$contra'";
-        parent::consulta( $sql );
-        if (parent::totalDatos() == 1) {
-            $ssid = session_id();
-            if ( empty( $ssid ) ){
-                session_start();
-            }
-            $_SESSION['usuario'] = $usuario;
-            $this->_valido = true;
+		WHERE `nick` LIKE :usuario 
+		AND `contra` LIKE :password";
+        $query = $conexion->prepare( $sql );
+        if ( $query->execute( array(':usuario'=>$usuario,':password'=>$password ) ) ) {
+            if ( $query->rowCount() == 1 ) {
+                $ssid = session_id();
+                if ( empty( $ssid ) ) {
+                    session_start();
+                }
+                $_SESSION['usuario'] = $usuario;
+                $this->_valido = true;
+            }    
         }
-        return $this->_valido;
+        return $this->_valido;  
     }
 }
 ?>

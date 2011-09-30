@@ -12,7 +12,7 @@
  * @license  http://creativecommons.org/licenses/by-sa/3.0/ Creative Commons by-sa 3.0
  * @link     https://github.com/sbarrat/cni
  */
-require_once 'Sql.php';
+require_once 'DbConnection.php';
 /**
  * Avisos Class Doc Comment
  * 
@@ -24,13 +24,15 @@ require_once 'Sql.php';
  * @link     https://github.com/sbarrat/cni
  *
  */
-class Avisos extends Sql
+class Avisos
 {
+    private $_conexion = null;
     /**
      * Controla la ordenacion de la vista
      * @var string
      */
     private $_orden = '';
+    
     /**
      * Almacena el resultado de proximos cumpleaños
      * @var array
@@ -41,8 +43,71 @@ class Avisos extends Sql
      */
     public function __construct ()
     {
-        parent::__construct();
+        $this->_conexion = DbConnection::connect();
         $this->_orden = (date( 'm' ))? " DESC ":"";
+    }
+    
+    private function _cumples( $tabla = 'empleados' )
+    {
+        $campos = array(
+        'pcentral' => array(
+            'Id' =>'`pcentral`.`idemp`',
+            'Nombre' => '`pcentral`.`persona_central`',
+            'Fecha' => '`pcentral`.`cumple`'
+            ),
+        'pempresa' => array(
+            'Id' => '`pempresa`.`idemp`',
+            'Nombre' => "CONCAT(`pempresa`.`nombre`, ' ', `pempresa`.`apellidos`)",
+            'Fecha' => '`pempresa`.`cumple`'
+            )    
+        );
+        
+        
+        //Proximos Central y Empresa
+        if ( array_key_exists($tabla, $campos) ){
+             $sql = "SELECT
+			`clientes`.`Nombre` as Empresa,
+		    $campos[$tabla]['Nombre'] as Nombre,
+		    $campos[$tabla]['Fecha'] as Fecha, 
+			`clientes`.`id`, 
+			DATE_FORMAT( $campos[$tabla]['Fecha'] , '0000-%m-%d' ) AS cumplea
+			FROM `clientes` INNER JOIN `$tabla` 
+			ON `clientes`.`Id` = $campos[$tabla]['Id'] 
+			WHERE (
+ 				DAY( $campos[$tabla]['Fecha'] ) >= DAY( CURDATE() ) 
+ 				AND MONTH( $campos[$tabla]['Fecha'] ) 
+ 				LIKE MONTH( CURDATE() )
+ 				OR MONTH( $campos[$tabla]['Fecha'] ) 
+ 				LIKE MONTH( DATE_ADD( CURDATE(), INTERVAL 40 DAY ) )
+			) 
+			AND `clientes`.`Estado_de_cliente` != 0
+ 			ORDER BY MONTH( $campos[$tabla]['Fecha'] ) " . $this->_orden . ", 
+ 			DAY( $campos[$tabla]['Fecha'] ) ";
+        } else {
+         // Proximos Centro
+             $sql = "SELECT 'Centro' as Empresa, CONCAT(`Nombre`,' ', `Apell1`, ' ',`Apell2`) as Nombre,
+         `FechNac` as Fecha FROM `empleados`,  
+		WHERE ( 
+		DATEDIFF( 
+			DATE_FORMAT( DATE_ADD( CURDATE(), INTERVAL 40 DAY ), '0000-%m-%d' ),
+			DATE_FORMAT( `FechNac`, '0000-%m-%d' )
+			) <= 39
+			AND
+			DATEDIFF(
+			DATE_FORMAT( DATE_ADD( CURDATE(), INTERVAL 40 DAY ), '0000-%m-%d' ),
+			DATE_FORMAT( `FechNac`, '0000-%m-%d' )
+			) >= 0
+			) ";
+        }
+        $this->_trataResultadoCumples($this->_conexion->query( $sql ) );
+        
+        
+    }
+    private function _trataResultadoCumples( $resource )
+    {
+        foreach ( $resource as $row ){
+            $this->_cumples[] = array($row['Fecha'],$row['Nombre'].$row['Empresa']);
+        }
     }
     /**
      * Muestra los  que cumplen años los proximos 40 dias de la central
@@ -173,8 +238,9 @@ class Avisos extends Sql
 		AND `clientes`.`Estado_de_cliente` != 0 
 		ORDER by MONTH( `renovacion` ) ASC, 
 		DAY( `renovacion` ) ASC";
-        parent::consulta( $sql );
-        return parent::datos();    
+        return $this->_conexion->query( $sql );
+       /* parent::consulta( $sql );
+        return parent::datos();   */ 
     }
     
     /**
@@ -184,9 +250,10 @@ class Avisos extends Sql
      */
     public function verCumples() 
     {
-        $this->_cumplesProximosCentral();
-        $this->_cumplesProximosCentro();
-        $this->_cumplesProximosEmpresa();
+        $this->_cumples( 'pempresa' );
+        $this->_cumples( 'pcentral' );
+        $this->_cumples();
+        
         sort( $this->_cumples );
         return $this->_cumples;
     }

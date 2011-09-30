@@ -13,8 +13,9 @@
  * 			 Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 Unported
  * @link     https://github.com/sbarrat/cni
  */
+require_once 'DbConnection.php';
 /**
- * AlumnosController Class Doc Comment
+ * Sql Class Doc Comment
  * 
  * @category Class
  * @package  Usuarios
@@ -29,24 +30,14 @@ class Sql
 {
     private $_conexion = null;
     private $_result = null;
-    private $_host = "127.0.0.1:3306";
-    private $_username = "cni";
-    private $_password = "inc";
-    private $_dbname = "centro";
+   
     /**
      * Constructor de clase, crea una conexion persistente a la base
      * de datos
      */
     function __construct ()
     {
-        $this->_conexion 
-        	= mysql_pconnect( $this->_host, $this->_username, $this->_password );
-        if ( !$this->_conexion ) {
-            die( "Database connection failed: " . mysql_error() );
-        }
-        if ( !mysql_select_db( $this->_dbname, $this->_conexion ) ) {
-            die( "Database selection failed: " . mysql_error() );
-        }
+        $this->_conexion = DbConnection::connect();
     }
     /**
      * Enter description here ...
@@ -56,7 +47,7 @@ class Sql
      */
     function consulta ( $sql )
     {
-        $this->_result = mysql_query( $sql, $this->_conexion );
+        $this->_result = $this->_conexion->query( $sql );
     }
     /**
      * Devuelve todos los datos de la consulta en un array asociativa
@@ -111,8 +102,8 @@ class Sql
     /**
      * Cierra la conexion a la base de datos
      */
-    function close ()
+    /*function close ()
     {
         mysql_close( $this->_conexion );
-    }
+    }*/
 }
