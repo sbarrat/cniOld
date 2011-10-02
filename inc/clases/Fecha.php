@@ -117,4 +117,20 @@ class Fecha
         $reves = explode( '-', $fecha );
         return $reves[1] . '-' . $reves[0];
     }
+    /**
+     * Creamos un stamp para la ordenacion de la lista por fecha
+     * 
+     * @param array $fecha
+     */
+    public static function ordenaFecha ( $fecha )
+    {
+        $reves = explode( '-', $fecha );
+        if ( date( 'm' ) == 12 && $reves[1] == 1 ) {
+            $year = date( 'Y' ) + 1;
+        } else {
+            $year = date( 'Y' );
+        }
+        return $year . $reves[1] . $reves[2];
+        
+    }
 }

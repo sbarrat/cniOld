@@ -60,7 +60,7 @@ media="screen, projection" />
 <div id="cuerpo" class='container showgrid'>
 <!-- Autogenerado -->	
 </div>
-<script type='text/javascript'>
+<script>
 $('document').ready( function() {
 	$('#cuerpo').load('inc/views/index.php');
 } );

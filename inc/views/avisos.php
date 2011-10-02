@@ -30,10 +30,9 @@ if ( isset( $_SESSION['usuario'] ) ) {
         Nadie Cumple años en los proximos dias
         </div>";
     } else {
-        
         foreach ( $cumples as $cumple ) {
             echo "<div class='linea span-12 last'>" .
-            $cumple[1]. " ". $cumple[2] . " " . $cumple[4] .
+            $cumple[1] . " ". $cumple[2] . " de " . $cumple[3] . 
             "</div>";
         }
     }
@@ -49,8 +48,7 @@ if ( isset( $_SESSION['usuario'] ) ) {
     } else {
         foreach ( $contratos as $contrato ) {
             echo "<div class='linea span-12 last'>" .
-            Fecha::diaYmes( $contrato['renovacion'] ). " " . 
-            $contrato['Nombre'] . 
+            $contrato[1] . " " . $contrato[2] . 
             "</div>";
         }
     }

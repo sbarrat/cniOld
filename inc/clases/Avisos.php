@@ -39,6 +39,11 @@ class Avisos
      */
     private $_cumples = array();
     /**
+     * Almacena el resultado de los contratos
+     * @var array
+     */
+    private $_contratos = array();
+    /**
      * Constructor de la funcion
      */
     public function __construct ()
@@ -46,7 +51,11 @@ class Avisos
         $this->_conexion = DbConnection::connect();
         $this->_orden = (date( 'm' ))? " DESC ":"";
     }
-    
+    /**
+    * Segun la tabla pasada devuelve unos datos de cumpleaños u otros
+    * 
+    * @param string $tabla
+    */
     private function _cumples( $tabla = 'empleados' )
     {
         $campos = array(
@@ -60,33 +69,31 @@ class Avisos
             'Nombre' => "CONCAT(`pempresa`.`nombre`, ' ', `pempresa`.`apellidos`)",
             'Fecha' => '`pempresa`.`cumple`'
             )    
-        );
-        
-        
+        );      
         //Proximos Central y Empresa
-        if ( array_key_exists($tabla, $campos) ){
+        if ( array_key_exists( $tabla, $campos ) ) {
              $sql = "SELECT
 			`clientes`.`Nombre` as Empresa,
-		    $campos[$tabla]['Nombre'] as Nombre,
-		    $campos[$tabla]['Fecha'] as Fecha, 
+             {$campos[$tabla]['Nombre']} as Nombre,
+             {$campos[$tabla]['Fecha']} as Fecha, 
 			`clientes`.`id`, 
-			DATE_FORMAT( $campos[$tabla]['Fecha'] , '0000-%m-%d' ) AS cumplea
+			DATE_FORMAT( {$campos[$tabla]['Fecha']} , '0000-%m-%d' ) AS cumplea
 			FROM `clientes` INNER JOIN `$tabla` 
-			ON `clientes`.`Id` = $campos[$tabla]['Id'] 
+			ON `clientes`.`Id` = {$campos[$tabla]['Id']} 
 			WHERE (
- 				DAY( $campos[$tabla]['Fecha'] ) >= DAY( CURDATE() ) 
- 				AND MONTH( $campos[$tabla]['Fecha'] ) 
+ 				DAY( {$campos[$tabla]['Fecha']} ) >= DAY( CURDATE() ) 
+ 				AND MONTH( {$campos[$tabla]['Fecha']} ) 
  				LIKE MONTH( CURDATE() )
- 				OR MONTH( $campos[$tabla]['Fecha'] ) 
+ 				OR MONTH( {$campos[$tabla]['Fecha']} ) 
  				LIKE MONTH( DATE_ADD( CURDATE(), INTERVAL 40 DAY ) )
 			) 
 			AND `clientes`.`Estado_de_cliente` != 0
- 			ORDER BY MONTH( $campos[$tabla]['Fecha'] ) " . $this->_orden . ", 
- 			DAY( $campos[$tabla]['Fecha'] ) ";
+ 			ORDER BY MONTH( {$campos[$tabla]['Fecha']} ) " . $this->_orden . ", 
+ 			DAY( {$campos[$tabla]['Fecha']} ) ";
         } else {
-         // Proximos Centro
+             // Proximos Centro
              $sql = "SELECT 'Centro' as Empresa, CONCAT(`Nombre`,' ', `Apell1`, ' ',`Apell2`) as Nombre,
-         `FechNac` as Fecha FROM `empleados`,  
+         `FechNac` as Fecha FROM `empleados` 
 		WHERE ( 
 		DATEDIFF( 
 			DATE_FORMAT( DATE_ADD( CURDATE(), INTERVAL 40 DAY ), '0000-%m-%d' ),
@@ -99,122 +106,22 @@ class Avisos
 			) >= 0
 			) ";
         }
-        $this->_trataResultadoCumples($this->_conexion->query( $sql ) );
-        
-        
+        $this->_trataResultadoCumples( $this->_conexion->query( $sql ) );
     }
+    /**
+     * Trata los resultados de los cumpleaños para su visualizacion
+     * 
+     * @param array $resource
+     */
     private function _trataResultadoCumples( $resource )
     {
         foreach ( $resource as $row ){
-            $this->_cumples[] = array($row['Fecha'],$row['Nombre'].$row['Empresa']);
-        }
-    }
-    /**
-     * Muestra los  que cumplen años los proximos 40 dias de la central
-     * 
-     */
-    private function _cumplesProximosCentral ()
-    {
-        $sql = "SELECT
-		`clientes`.`Nombre`, 
-		`pcentral`.`persona_central`, 
-		`pcentral`.`cumple`,
-		`clientes`.`id`, 
-		DATE_FORMAT( `pcentral`.`cumple`, '0000-%m-%d' ) AS cumplea
-		FROM `clientes` INNER JOIN `pcentral` 
-		ON `clientes`.`Id` = `pcentral`.`idemp` 
-		WHERE (
- 			DAY( `pcentral`.`cumple` ) >= DAY( CURDATE() ) 
- 			AND MONTH( `pcentral`.`cumple` ) LIKE MONTH( CURDATE() )
- 			OR MONTH( `pcentral`.`cumple` ) 
- 			LIKE MONTH( DATE_ADD( CURDATE(), INTERVAL 40 DAY ) )
-		) 
-		AND `clientes`.`Estado_de_cliente` != 0
- 		ORDER BY MONTH( `pcentral`.`cumple` ) " . $this->_orden . ", 
- 		DAY( `pcentral`.`cumple` ) ";
-        parent::consulta( $sql );
-        if (parent::totalDatos() != 0) {
-            foreach (parent::datos() as $resultado) {
-                $this->_cumples[] = array(
-                    Fecha::invierte( Fecha::diaYmes( $resultado['cumple'] ) ), 
-                    Fecha::diaYmes( $resultado['cumple'] ), 
-                    Auxiliar::traduce( $resultado['persona_central'] ), 
-                    $resultado['id'], Auxiliar::traduce( $resultado['Nombre'] )
-                );
-            }
-        }
-    }
-    /**
-     * Muestra los  que cumplen años los proximos 40 dias de la empresa
-     * 
-     * @return void
-     */
-    private function _cumplesProximosEmpresa ()
-    {
-        $sql = "SELECT
-		`clientes`.`Nombre`,
-		`pempresa`.`nombre`,
-		`pempresa`.`apellidos`,
-		`pempresa`.`cumple`,
-		`clientes`.`id`, 
-		DATE_FORMAT( `pempresa`.`cumple`, '0000-%m-%d' ) AS cumplea
-		FROM `clientes` INNER JOIN `pempresa` 
-		ON `clientes`.`Id` = `pempresa`.`idemp` 
-		WHERE (
- 			DAY( `pempresa`.`cumple` ) >= DAY( CURDATE() ) 
- 			AND MONTH( `pempresa`.`cumple`) 
- 			LIKE MONTH( CURDATE() )
- 			OR MONTH( `pempresa`.`cumple`) 
- 			LIKE MONTH( DATE_ADD( CURDATE(), INTERVAL 40 DAY ) )
-		) 
-		AND `clientes`.`Estado_de_cliente` != 0
- 		ORDER BY MONTH( `pempresa`.`cumple`) " . $this->_orden . ", 
- 		DAY( `pempresa`.`cumple` )";
-        parent::consulta( $sql );
-        if (parent::totalDatos() != 0) {
-            foreach (parent::datos() as $resultado) {
-                $this->_cumples[] = array(
-                    Fecha::invierte( Fecha::diaYmes( $resultado['cumple'] ) ), 
-                    Fecha::diaYmes( $resultado['cumple'] ), 
-                    Auxiliar::traduce( $resultado['nombre'] ) . ' 
-						' .Auxiliar::traduce( $resultado['apellidos'] ), 
-                    $resultado['id'], 
-                    Auxiliar::traduce( $resultado['Nombre'] )
-                );
-            }
-        }
-    }
-    /**
-     * Muestra los  que cumplen años los proximos 40 dias del centro
-     * 
-     */
-    private function _cumplesProximosCentro ()
-    {
-        $sql = "SELECT * FROM `empleados` 
-		WHERE ( 
-		DATEDIFF( 
-			DATE_FORMAT( DATE_ADD( CURDATE(), INTERVAL 40 DAY ), '0000-%m-%d' ),
-			DATE_FORMAT( `FechNac`, '0000-%m-%d' )
-			) <= 39
-			AND
-			DATEDIFF(
-			DATE_FORMAT( DATE_ADD( CURDATE(), INTERVAL 40 DAY ), '0000-%m-%d' ),
-			DATE_FORMAT( `FechNac`, '0000-%m-%d' )
-			) >= 0
-			) ";
-        parent::consulta( $sql );
-        if (parent::totalDatos() != 0) {
-            foreach (parent::datos() as $resultado) {
-                $this->_cumples[] = array(
-                    Fecha::invierte( Fecha::cambiaf( $resultado['FechNac'] ) ), 
-                    Fecha::cambiaf( $resultado['FechNac'] ), 
-                    Auxiliar::traduce( $resultado['Nombre'] ) . ' 
-						' . Auxiliar::traduce( $resultado['Apell1'] ) . '
-						' . Auxiliar::traduce( $resultado['Apell2'] ),
-                    null, 
-                    null
-                    );
-            }
+            $this->_cumples[] = array(
+                Fecha::ordenaFecha( $row['Fecha'] ),
+                Fecha::diaYmes( $row['Fecha'] ),
+                ucwords( strtolower( Auxiliar::traduce( $row['Nombre'] ) ) ),
+                strtoupper( Auxiliar::traduce( $row['Empresa'] ) )
+            );
         }
     }
     /**
@@ -223,8 +130,7 @@ class Avisos
      *@return string cadena
      */
     private function _finalizanContrato ()
-    {
-        
+    { 
         $sql = "SELECT `facturacion`.`id`, 
 		`facturacion`.`idemp`, 
 		`facturacion`.`finicio`, 
@@ -238,9 +144,22 @@ class Avisos
 		AND `clientes`.`Estado_de_cliente` != 0 
 		ORDER by MONTH( `renovacion` ) ASC, 
 		DAY( `renovacion` ) ASC";
-        return $this->_conexion->query( $sql );
-       /* parent::consulta( $sql );
-        return parent::datos();   */ 
+        $this->_trataResultadoContratos( $this->_conexion->query( $sql ) );       
+    }
+    /**
+     * Trata los resultados de contratos para su visualizacion
+     * 
+     * @param array $resource
+     */
+    private function _trataResultadoContratos ( $resource )
+    {
+        foreach ( $resource as $row ) {
+            $this->_contratos[] = array (
+                Fecha::ordenaFecha( $row['renovacion'] ),
+                Fecha::diaYmes( $row['renovacion'] ),
+                strtoupper( Auxiliar::traduce( $row['Nombre'] ) )
+            );
+        }
     }
     
     /**
@@ -253,7 +172,6 @@ class Avisos
         $this->_cumples( 'pempresa' );
         $this->_cumples( 'pcentral' );
         $this->_cumples();
-        
         sort( $this->_cumples );
         return $this->_cumples;
     }
@@ -264,6 +182,8 @@ class Avisos
      */
     public function verContratos()
     {
-        return $this->_finalizanContrato();
+        $this->_finalizanContrato();
+        sort( $this->_contratos );
+        return $this->_contratos;   
     }
 }
